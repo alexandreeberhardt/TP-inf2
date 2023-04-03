@@ -16,13 +16,16 @@ class Rectangle:
         self.largeur = largeur
 
     def perimetre(self):
-        return 2 * (self.longueur + self.largeur)
+        return 2 * self.longueur + 2 * self.largeur)
 
     def aire(self):
         return self.longueur * self.largeur
 
     def est_carre(self):
-        return self.longueur == self.largeur
+        if self.longueur==self.largeur:
+            return True
+        else :
+            return False
 
     def le_plus_grand(self, other):
         aire_self = self.aire()

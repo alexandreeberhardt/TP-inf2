@@ -1,4 +1,7 @@
 class Rectangle():
+    '''
+    Cette class crée un rectangle qui a deux paramètres : une longueur et une largeur.
+    '''
     def __init__(self, longueur : float, largeur : float):
         self.longueur = longueur
         self.largeur = largeur
@@ -26,6 +29,7 @@ class Rectangle():
         return self.longueur * self.largeur
 
     def est_carre(self):
+        #si le rectangle est carré (longeur == largeur), la fonction renvoie True, sinon False
         if self.longueur == self.largeur:
             return True
         else:
@@ -47,6 +51,10 @@ class Rectangle():
                 f"Longueur : {self.longueur} - Largeur : {self.largeur} - Périmètre : {self.perimetre()} - Aire : {self.aire()} - {'Ce n est pas un carré'}")
 
 def main():
+    '''
+    Initialise deux rectangles pour tester, les données peuvent être modifiées.
+    Ils sont ensuite affichés puis comparés et le plus grand est à nouveaux réaffiché.
+    '''
     rectangle1 = Rectangle(1, 2)
     rectangle2 = Rectangle(3, 3)
     rectangle1.afficher()

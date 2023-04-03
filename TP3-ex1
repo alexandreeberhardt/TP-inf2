@@ -1,5 +1,5 @@
 class Rectangle:
-    def __init__(self, longueur, largeur):
+    def __init__(self, longueur : float, largeur : float):
         self.longueur = longueur
         self.largeur = largeur
 
@@ -7,52 +7,53 @@ class Rectangle:
         return self.longueur
 
     def set_longueur(self, longueur):
+        if not isinstance(longueur,float):
+            raise Exception("pas un float")
         self.longueur = longueur
 
     def get_largeur(self):
         return self.largeur
 
     def set_largeur(self, largeur):
+        if not isinstance(largeur,float):
+            raise Exception("pas un float")
         self.largeur = largeur
 
     def perimetre(self):
-        return 2 * self.longueur + 2 * self.largeur)
+        return 2 * self.longueur + 2 * self.largeur
 
     def aire(self):
         return self.longueur * self.largeur
 
     def est_carre(self):
-        if self.longueur==self.largeur:
+        if self.longueur == self.largeur:
             return True
-        else :
+        else:
             return False
 
     def le_plus_grand(self, other):
-        aire_self = self.aire()
-        aire_other = other.aire()
-        if aire_self > aire_other:
+        if self.aire() > other.aire():
             return self
-        elif aire_other > aire_self:
+        elif other.aire() > self.aire():
             return other
         else:
             return self
 
     def afficher(self):
-        print(
-            f"Longueur : {self.longueur} - Largeur : {self.largeur} - Périmètre : {self.perimetre()} - Aire : {self.aire()} - {'C\'est un carré' if self.est_carre() else 'Ce n\'est pas un carré'}")
+        if self.est_carre() == True:
+            print(f"Longueur : {self.longueur} - Largeur : {self.largeur} - Périmètre : {self.perimetre()} - Aire : {self.aire()} - {'C est un carré'}")
+        else:
+            print(
+                f"Longueur : {self.longueur} - Largeur : {self.largeur} - Périmètre : {self.perimetre()} - Aire : {self.aire()} - {'Ce n est pas un carré'}")
 
+    def main():
+        rectangle1 = Rectangle(1, 2)
+        rectangle2 = Rectangle(3.0, 3.0)
 
-def main():
-    # Créer deux rectangles avec des dimensions différentes
-    rectangle1 = Rectangle(5.0, 3.0)
-    rectangle2 = Rectangle(4.0, 4.0)
+        rectangle1.afficher()
+        rectangle2.afficher()
+        print(f"Le plus grand rectangle est : ")
+        rectangle1.le_plus_grand(rectangle2).afficher()
 
-    # Tester les différentes méthodes
-    rectangle1.afficher()
-    rectangle2.afficher()
-    print(f"Le plus grand rectangle est : ")
-    rectangle1.le_plus_grand(rectangle2).afficher()
-
-
-if __name__ == "__main__":
-    main()
+    if __name__ == "__main__":
+        main()

@@ -1,1 +1,110 @@
+class PoupeeRusse: # On crée la classe PoupeeRusse
+    def __init__(self, nom : str, taille : float, ouverte : bool, dans, contient):
+        self.__nom = nom
+        self.__taille = taille
+        self.__ouverte = ouverte
+        self.__dans = dans
+        self.__contient = contient
 
+    @property
+    def nom(self):
+        return self.__nom
+
+    @nom.setter
+    def nom(self, nom):
+        if type(nom) != str:
+            raise TypeError("Le nom doit être une chaine de caractères\n")
+        self.__nom = nom
+
+    @property
+    def taille(self):
+        return self.__taille
+
+    @taille.setter
+    def taille(self,taille):
+        if type(taille) != float:
+            raise TypeError("La taille doit pouvoir être un décimal\n")
+        self.__taille = taille
+
+    @property
+    def ouverte(self):
+        return self.__ouverte
+
+    @ouverte.setter
+    def ouverte(self,ouverte):
+        if type(ouverte) != bool:
+            raise TypeError("La variable ouverte est booléenne, soit ouverte soit fermée\n")
+        self.__ouverte = ouverte
+
+    @property
+    def dans(self):
+        return self.__dans
+
+    @dans.setter
+    def dans(self,dans):
+        if type(dans) != PoupeeRusse:
+            raise TypeError("La poupée russe doit être contenue dans une autre poupée russe\n")
+        self.__dans = dans
+
+    @property
+    def contient(self):
+        return self.__contient
+
+    @contient.setter
+    def contient(self, contient):
+        if type(contient) != PoupeeRusse: # même interrogation
+            raise TypeError("Une poupée doit contenir une autre poupée\n")
+        self.__contient = contient
+
+    def ouvrir(self):
+        if not self.ouverte and not self.dans:
+            self.ouverte = True
+            print(f"La poupée {self.nom} a été ouverte\n")
+        else:
+            print(f"La poupée {self.nom} n'a pas été ouverte\n")
+
+    def fermer(self):
+        if self.ouverte and not self.dans:
+            self.ouverte = False
+            print(f"La poupée {self.nom} a été fermée\n")
+        else :
+            print(f"La poupée {self.nom} n'a pas pu être fermée\n")
+
+    def placer_dans(self,p):
+        if not self.dans and not p.contient and not self.ouverte and p.ouverte and self.taille < p.taille:
+            p.contient = self
+            self.dans = p
+            print(f"{self.nom} a été placée dans {p.nom}\n")
+        else:
+            print(f"{self.nom} n'a pas été placée dans {p.nom}\n")
+
+    def sortir_de(self,p):
+        if self.dans == p and p.contient == self and p.ouverte:
+            self.dans = None
+            p.contient = None
+            print(f"{self.nom} a été retirée dans la poupée {p.nom}\n")
+        else:
+            print(f"{self.nom} n'a pas été retirée de la poupée {p.nom}\n")
+
+    def afficher(self):
+        return f'nom : [{self.nom}] - taille : [{self.taille}] - Ouverte ? : [{self.ouverte}] - Contenue dans : [{self.dans.nom if self.dans is not None else None}] - Contient : [{self.contient.nom if self.contient is not None else None}]\n'
+
+def main():
+    try:
+        Poupee1 = PoupeeRusse("Lucie",15.4,True,None,None)
+        Poupee2 = PoupeeRusse("Vladislava", 16,False,None,None)
+        print(Poupee1.afficher())
+        print(Poupee2.afficher())
+        Poupee1.fermer()
+        Poupee2.ouvrir()
+        Poupee1.placer_dans(Poupee2)
+        print(Poupee1.afficher())
+        print(Poupee2.afficher())
+        Poupee1.sortir_de(Poupee2)
+        print(Poupee1.afficher())
+        print(Poupee2.afficher())
+    except TypeError as e:
+        print(e)
+
+if __name__== "__main__":
+    main()

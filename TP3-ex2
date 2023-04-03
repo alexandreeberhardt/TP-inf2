@@ -1,0 +1,80 @@
+import random
+class Pokemon :
+    """
+    Crée des pokemons avec des noms, hp et atk
+    """
+    def __init__(self,nom : str, hp : int, atk : int):
+        self.nom=nom
+        self.hp=hp
+        self.atk=atk
+
+    @property
+    def nom(self):
+        return self._nom
+
+    @nom.setter
+    def nom(self, nom):
+        if not isinstance(nom, str):
+            raise Exception("pas un str")
+        self._nom = nom
+
+    @property
+    def hp(self):
+        return self._hp
+
+    @hp.setter
+    def hp(self, hp):
+        if not isinstance(hp, int):
+            raise Exception("pas un int")
+        self._hp = hp
+
+    @property
+    def atk(self):
+        return self._atk
+
+    @atk.setter
+    def atk(self, atk):
+        if not isinstance(atk, int):
+            raise Exception("pas un int")
+        self._atk = atk
+
+    def est_ko(self):
+        if self.hp<=0:
+            return True
+        else :
+            return False
+    def attaquer(self,p):
+        #choisi un entier au hasard entre 0 et l'attaque du pokemon
+        p.hp-=random.randint(0,self.atk)
+
+    def combattre(self,p):
+        t=0
+        while not self.est_ko() and not p.est_ko():
+            if t%2==0:
+                self.attaquer(p)
+            else :
+                p.attaquer(self)
+            t+=1
+        if self.hp>0:
+            print( f"le pokemon gagnant est {self.nom} en {t} tours")
+        else :
+            print( f"le pokemon gagnant est {p.nom} en {t} tours")
+    def afficher(self):
+        print( f"le pokemon s'appelle {self.nom}, il lui reste {self.hp} hp et il a {self.atk} points d'attaque")
+def main():
+    '''
+    Initialise deux rectangles pour tester, les données peuvent être modifiées.
+    Ils sont ensuite affichés puis comparés et le plus grand est à nouveaux réaffiché.
+    '''
+    pikachu = Pokemon("Pikachu",100,10)
+    aspicot = Pokemon("Aspicot", 90, 10)
+    pikachu.afficher()
+    aspicot.afficher()
+    pikachu.combattre(aspicot)
+
+
+if __name__ == "__main__":
+    main()
+
+
+

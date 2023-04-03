@@ -3,7 +3,7 @@ class Pokemon :
     """
     Crée des pokemons avec des noms, hp et atk
     """
-    def __init__(self,nom : str, hp : int, atk : int):
+    def __init__(self,nom : str, hp : float, atk : int):
         self.nom=nom
         self.hp=hp
         self.atk=atk
@@ -24,8 +24,9 @@ class Pokemon :
 
     @hp.setter
     def hp(self, hp):
-        if not isinstance(hp, int):
-            raise Exception("pas un int")
+        if not isinstance(hp, float):
+            if not isinstance(hp, int):
+                raise Exception("pas un float ni int")
         self._hp = hp
 
     @property
@@ -43,17 +44,44 @@ class Pokemon :
             return True
         else :
             return False
-    def attaquer(self,p):
+    def attaquer(self,p,multiplicateur):
         #choisi un entier au hasard entre 0 et l'attaque du pokemon
-        p.hp-=random.randint(0,self.atk)
+        p.hp-=(multiplicateur*random.randint(0,self.atk))
 
     def combattre(self,p):
         t=0
         while not self.est_ko() and not p.est_ko():
             if t%2==0:
-                self.attaquer(p)
+                if self.type =="feu" and (p.type=="eau" or p.type=="feu") :
+                    self.attaquer(p,0.5)
+                elif self.type =="feu" and p.type=="plante" :
+                    self.attaquer(p,2)
+                elif self.type =="eau" and (p.type=="eau" or p.type=="plante") :
+                    self.attaquer(p,0.5)
+                elif self.type =="eau" and p.type=="feu" :
+                    self.attaquer(p,2)
+                elif self.type =="plante" and (p.type=="feu" or p.type=="plante") :
+                    self.attaquer(p,0.5)
+                elif self.type =="plante" and p.type=="eau" :
+                    self.attaquer(p,2)
+                else :
+                    self.attaquer(p,1)
+
             else :
-                p.attaquer(self)
+                if p.type =="feu" and (self.type=="eau" or self.type=="feu") :
+                    p.attaquer(self,0.5)
+                elif p.type =="feu" and self.type=="plante" :
+                    p.attaquer(self,2)
+                elif p.type =="eau" and (self.type=="eau" or self.type=="plante") :
+                    p.attaquer(self,0.5)
+                elif p.type =="eau" and self.type=="feu" :
+                    p.attaquer(self,2)
+                elif p.type =="plante" and (self.type=="feu" or self.type=="plante") :
+                    p.attaquer(self,0.5)
+                elif p.type =="plante" and self.type=="eau" :
+                    p.attaquer(self,2)
+                else :
+                    p.attaquer(self,1)
             t+=1
         if self.hp>0:
             print( f"le pokemon gagnant est {self.nom} en {t} tours")
@@ -61,20 +89,28 @@ class Pokemon :
             print( f"le pokemon gagnant est {p.nom} en {t} tours")
     def afficher(self):
         print( f"le pokemon s'appelle {self.nom}, il lui reste {self.hp} hp et il a {self.atk} points d'attaque")
+
+
+class PokemonNormal(Pokemon):
+    type = "normal"
+class PokemonFeu(Pokemon):
+    type = "feu"
+class PokemonEau(Pokemon):
+    type = "eau"
+class PokemonPlante(Pokemon):
+    type = "plante"
+
 def main():
     '''
     Initialise deux rectangles pour tester, les données peuvent être modifiées.
     Ils sont ensuite affichés puis comparés et le plus grand est à nouveaux réaffiché.
     '''
-    pikachu = Pokemon("Pikachu",100,10)
-    aspicot = Pokemon("Aspicot", 90, 10)
-    pikachu.afficher()
+    flamajou = PokemonFeu("flamajou",100,10)
+    aspicot = PokemonPlante("Aspicot", 200, 20)
+    flamajou.afficher()
     aspicot.afficher()
-    pikachu.combattre(aspicot)
+    flamajou.combattre(aspicot)
 
 
 if __name__ == "__main__":
     main()
-
-
-

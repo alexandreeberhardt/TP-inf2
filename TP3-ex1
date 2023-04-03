@@ -1,4 +1,4 @@
-class Rectangle:
+class Rectangle():
     def __init__(self, longueur : float, largeur : float):
         self.longueur = longueur
         self.largeur = largeur
@@ -46,14 +46,13 @@ class Rectangle:
             print(
                 f"Longueur : {self.longueur} - Largeur : {self.largeur} - Périmètre : {self.perimetre()} - Aire : {self.aire()} - {'Ce n est pas un carré'}")
 
-    def main():
-        rectangle1 = Rectangle(1, 2)
-        rectangle2 = Rectangle(3.0, 3.0)
+def main():
+    rectangle1 = Rectangle(1, 2)
+    rectangle2 = Rectangle(3, 3)
+    rectangle1.afficher()
+    rectangle2.afficher()
+    print(f"Le plus grand rectangle est : ",end=" ")
+    rectangle1.le_plus_grand(rectangle2).afficher()
 
-        rectangle1.afficher()
-        rectangle2.afficher()
-        print(f"Le plus grand rectangle est : ")
-        rectangle1.le_plus_grand(rectangle2).afficher()
-
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()

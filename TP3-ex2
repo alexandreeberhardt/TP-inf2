@@ -6,13 +6,14 @@ class PoupeeRusse: # On crée la classe PoupeeRusse
         self.__dans = dans
         self.__contient = contient
 
+    # L'utilisation du property fait appel aux getter et aux setter, on l'utilise pour toutes les variables initialisées
     @property
     def nom(self):
         return self.__nom
 
     @nom.setter
     def nom(self, nom):
-        if type(nom) != str:
+        if type(nom) != str: #permet de vérifier le type de variable pour qu'il soit bien respecté
             raise TypeError("Le nom doit être une chaine de caractères\n")
         self.__nom = nom
 
@@ -56,8 +57,9 @@ class PoupeeRusse: # On crée la classe PoupeeRusse
             raise TypeError("Une poupée doit contenir une autre poupée\n")
         self.__contient = contient
 
+    #Pour les 5 fonctions suivantes, on vérifie les conditions imposées par l'exercice
     def ouvrir(self):
-        if not self.ouverte and not self.dans:
+        if not self.ouverte and not self.dans: # On aurait aussi pu utiliser if self.ouverte == False etc
             self.ouverte = True
             print(f"La poupée {self.nom} a été ouverte\n")
         else:
@@ -87,8 +89,9 @@ class PoupeeRusse: # On crée la classe PoupeeRusse
             print(f"{self.nom} n'a pas été retirée de la poupée {p.nom}\n")
 
     def afficher(self):
-        return f'nom : [{self.nom}] - taille : [{self.taille}] - Ouverte ? : [{self.ouverte}] - Contenue dans : [{self.dans.nom if self.dans is not None else None}] - Contient : [{self.contient.nom if self.contient is not None else None}]\n'
+        return f'nom : [{self.nom}] - taille : [{self.taille}] - Ouverte ? : [{self.ouverte}] - Contenue dans : [{self.dans.nom if self.dans is not None else None}] - Contient : [{self.contient.nom if self.contient is not None else None}]\n' # Pour le contenue et ce que la poupée russe contient, on vérifie toutes les conditions cad si elle est dans / si elle contient.
 
+# On effectue toute sorte de test pour tester toutes les fonctions inscrites auparavant avec les conditions correspondantes.
 def main():
     try:
         Poupee1 = PoupeeRusse("Lucie",15.4,True,None,None)

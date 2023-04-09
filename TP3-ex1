@@ -23,7 +23,7 @@ class Rectangle():
         self.largeur = largeur
 
     def perimetre(self):
-        return 2 * self.longueur + 2 * self.largeur
+        return 2 * (self.longueur + self.largeur)
 
     def aire(self):
         return self.longueur * self.largeur

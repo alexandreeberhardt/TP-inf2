@@ -1,6 +1,8 @@
 class PoupeeRusse: # On crée la classe PoupeeRusse
     def __init__(self, nom : str, taille : float, ouverte : bool, dans, contient):
-        self.__nom = nom
+    #L'utilisation de deux __ avant la variable est une convention pour montrer que cette variable est privée, il n'est pas recommandé de la modifier
+    #La différence entre utiliser 1 ou 2 _ est que grace au __ (méthode privée), la variable sera mieux dissimulé à l'extérieru de la classe que _ (méthode protégée)
+        self.__nom = nom 
         self.__taille = taille
         self.__ouverte = ouverte
         self.__dans = dans
@@ -44,7 +46,7 @@ class PoupeeRusse: # On crée la classe PoupeeRusse
     @dans.setter
     def dans(self,dans):
         if type(dans) != PoupeeRusse:
-            raise TypeError("La poupée russe doit être contenue dans une autre poupée russe\n")
+            raise TypeError("La poupée russe doit pouvoir être contenue dans une autre poupée russe\n")
         self.__dans = dans
 
     @property
@@ -53,11 +55,10 @@ class PoupeeRusse: # On crée la classe PoupeeRusse
 
     @contient.setter
     def contient(self, contient):
-        if type(contient) != PoupeeRusse: # même interrogation
-            raise TypeError("Une poupée doit contenir une autre poupée\n")
+        if type(contient) != PoupeeRusse: 
+            raise TypeError("Une poupée doit pouvoir contenir une autre poupée\n")
         self.__contient = contient
 
-    #Pour les 5 fonctions suivantes, on vérifie les conditions imposées par l'exercice
     def ouvrir(self):
         if not self.ouverte and not self.dans: # On aurait aussi pu utiliser if self.ouverte == False etc
             self.ouverte = True

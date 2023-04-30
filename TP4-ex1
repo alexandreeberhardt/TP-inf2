@@ -1,0 +1,22 @@
+liste_pi=[]
+from math import pi
+with open("poeme.txt") as f:
+    lignes = f.readlines()
+    for ligne in lignes :
+        new_ligne = ligne.replace("!","")
+        new_ligne = new_ligne.replace(" ?", "")
+        new_ligne = new_ligne.replace(".", "")
+        new_ligne = new_ligne.replace(" !", "")
+        new_ligne = new_ligne.replace("\n", "")
+        new_ligne = new_ligne.replace("'", " ")
+        new_ligne = new_ligne.replace(",", "")
+        if new_ligne[-1]==" ":
+            new_ligne=new_ligne[:-1]
+        for mot in new_ligne.split(" "):
+            liste_pi.append(len(mot))
+
+pi_poeme=str(liste_pi[0])+"."
+for i in range (1,len(liste_pi)-1):
+    pi_poeme+=str(liste_pi[i])
+print(pi)
+print(pi_poeme)

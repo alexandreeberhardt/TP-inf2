@@ -1,0 +1,75 @@
+import csv
+class Etudiant :
+    def __init__(self, nom, annee_naissance, gpa, connais_python):
+        self.nom=nom
+        self.annee_naissance=annee_naissance
+        self.gpa=gpa
+        self.connais_python=connais_python
+    @property
+    def nom(self):
+        return self._nom
+    @property
+    def annee_naissance(self):
+        return self._annee_naissance
+    @property
+    def gpa(self):
+        return self._gpa
+    @property
+    def connais_python(self):
+        return self._connais_python
+    @nom.setter
+    def nom(self, nom):
+        if not isinstance(nom, str):
+            raise Exception("pas un str")
+        self._nom = nom
+
+    @annee_naissance.setter
+    def annee_naissance(self, annee_naissance):
+        if not isinstance(annee_naissance, int):
+            raise Exception("pas un int")
+        #on rajoute une vérification sur l'année mais on pourrait en rajouter d'autres
+        # si on avait l'age minimal et maximal pour être étudiant.
+        if annee_naissance>2023:
+            raise Exception("Dans le futut donc impossible")
+        self._annee_naissance = annee_naissance
+
+    @gpa.setter
+    def gpa(self, gpa):
+        if not isinstance(gpa, float):
+            raise Exception("pas un float")
+        if gpa<0 or gpa>5:
+            raise Exception("valeur inconforme")
+        self._gpa = gpa
+
+    @connais_python.setter
+    def connais_python(self, connais_python):
+        if not isinstance(connais_python, bool):
+            raise Exception("pas un booléen")
+        self._connais_python = connais_python
+    def to_dict(self):
+        dico={}
+        dico["nom"]=self.nom
+        dico["annee_naissance"]=self.annee_naissance
+        dico["gpa"]=self.gpa
+        dico["connais_python"]=self.connais_python
+        return dico
+class Groupe :
+    def __init__(self):
+        self.liste = []
+    def ajouter_etudiant(self, etudiant):
+        self.liste.append(etudiant)
+    def sauvegarder_csv(self, chemin):
+        with open('etudiants.csv', 'w', newline='') as csvfile:
+            fieldnames = ['nom', 'annee_naissance', 'gpa', 'connais_python']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            for etudiant in self.liste:
+                writer.writerow({'nom': etudiant.to_dict()["nom"], 'annee_naissance': etudiant.to_dict()["annee_naissance"],'gpa': etudiant.to_dict()["gpa"],'connais_python': etudiant.to_dict()["connais_python"]})
+
+
+groupe = Groupe()
+etudiant1 = Etudiant("Dupont", 2003, 2.5, True)
+etudiant2 = Etudiant("Martin", 2002, 2.0,False)
+groupe.ajouter_etudiant(etudiant1)
+groupe.ajouter_etudiant(etudiant2)
+groupe.sauvegarder_csv("../")

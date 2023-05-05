@@ -53,6 +53,13 @@ class Etudiant :
         dico["gpa"]=self.gpa
         dico["connais_python"]=self.connais_python
         return dico
+    def from_dict(self,di):
+        self.nom=di["nom"]
+        self.annee_naissance=int(di["annee_naissance"])
+        self.gpa=float(di["gpa"])
+        self.connais_python=bool(di["connais_python"])
+        return self
+
 class Groupe :
     def __init__(self):
         self.liste = []
@@ -63,13 +70,20 @@ class Groupe :
             fieldnames = ['nom', 'annee_naissance', 'gpa', 'connais_python']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
+            print(self.liste)
             for etudiant in self.liste:
-                writer.writerow({'nom': etudiant.to_dict()["nom"], 'annee_naissance': etudiant.to_dict()["annee_naissance"],'gpa': etudiant.to_dict()["gpa"],'connais_python': etudiant.to_dict()["connais_python"]})
+                dico=etudiant.to_dict()
+                writer.writerow({'nom': dico["nom"], 'annee_naissance': etudiant.to_dict()["annee_naissance"],'gpa': etudiant.to_dict()["gpa"],'connais_python': etudiant.to_dict()["connais_python"]})
 
 
 groupe = Groupe()
 etudiant1 = Etudiant("Dupont", 2003, 2.5, True)
-etudiant2 = Etudiant("Martin", 2002, 2.0,False)
+etudiant2 = Etudiant("Martin", 2002, 2.0, False)
+d={"nom":"Alexandre","annee_naissance":2003,"gpa":5.0,"connais_python":True}
+#il y a un bug si je met juste alexandre=Etudiant.from_dict(d) qui n'a pas été résolu ni par nous ni par le professeur
+alexandre=Etudiant("info bidons",2000,0.0,False).from_dict(d)
+
 groupe.ajouter_etudiant(etudiant1)
 groupe.ajouter_etudiant(etudiant2)
+groupe.ajouter_etudiant(alexandre)
 groupe.sauvegarder_csv("../")

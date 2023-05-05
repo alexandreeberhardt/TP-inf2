@@ -1,17 +1,15 @@
 import pickle
 from TP4EXO2 import Groupe
 
-groupe1 = Groupe()
-def main():
-    with open("TP4EXO2.pickle", "ab") as f:
-        pickle.dump(groupe1,f)
+groupe = Groupe()
 
-    with open("TP4EXO2.pickle", "rb") as f:
-        groupe2 = pickle.load(f)
+with open("TP4EXO2.py", "wb") as f:
+    pickle.dump(groupe, f)
 
-        print(groupe2)
+with open("TP4EXO2.py", "rb") as f:
+    groupe = pickle.load(f)
 
-if __name__== "__main__":
-    main()
-
+assert str(Groupe) == str(groupe)
+for i in range(len(Groupe)):
+    assert str(Groupe[i]) == str(groupe[i])
 

@@ -1,4 +1,5 @@
 import csv
+import pickle
 class Etudiant :
     def __init__(self, nom, annee_naissance, gpa, connais_python):
         self.nom=nom
@@ -44,7 +45,7 @@ class Etudiant :
     @connais_python.setter
     def connais_python(self, connais_python):
         if not isinstance(connais_python, bool):
-            raise Exception("pas un booléen")
+            raise Exception("pas un booleen")
         self._connais_python = connais_python
     def to_dict(self):
         dico={}
@@ -75,15 +76,28 @@ class Groupe :
                 dico=etudiant.to_dict()
                 writer.writerow({'nom': dico["nom"], 'annee_naissance': etudiant.to_dict()["annee_naissance"],'gpa': etudiant.to_dict()["gpa"],'connais_python': etudiant.to_dict()["connais_python"]})
 
+# création main ?
+def main():
+    groupe = Groupe()
+    etudiant1 = Etudiant("Dupont", 2003, 2.5, True)
+    etudiant2 = Etudiant("Martin", 2002, 2.0, False)
+    d={"nom":"Alexandre","annee_naissance":2003,"gpa":5.0,"connais_python":True}
+    #il y a un bug si je met juste alexandre=Etudiant.from_dict(d) qui n'a pas été résolu ni par nous ni par le professeur
+    alexandre=Etudiant("info bidons",2000,0.0,False).from_dict(d)
 
-groupe = Groupe()
-etudiant1 = Etudiant("Dupont", 2003, 2.5, True)
-etudiant2 = Etudiant("Martin", 2002, 2.0, False)
-d={"nom":"Alexandre","annee_naissance":2003,"gpa":5.0,"connais_python":True}
-#il y a un bug si je met juste alexandre=Etudiant.from_dict(d) qui n'a pas été résolu ni par nous ni par le professeur
-alexandre=Etudiant("info bidons",2000,0.0,False).from_dict(d)
+    groupe.ajouter_etudiant(etudiant1)
+    groupe.ajouter_etudiant(etudiant2)
+    groupe.ajouter_etudiant(alexandre)
+    groupe.sauvegarder_csv("../")
 
-groupe.ajouter_etudiant(etudiant1)
-groupe.ajouter_etudiant(etudiant2)
-groupe.ajouter_etudiant(alexandre)
-groupe.sauvegarder_csv("../")
+    with open("groupe_etudiant.pkl", "wb") as f: #sauvegarde du groupe d'étudiants dans un fichier binaire
+        pickle.dump(groupe, f)
+
+    with open("groupe_etudiant.pkl", "rb") as f: #Chargement du groupe d'étudiants à partiri du fichier binaire
+        nouveau_groupe = pickle.load(f)
+
+    print(str(groupe) == str(nouveau_groupe))  #vérif si le nouveau groupe est le même que l'origine
+
+
+if __name__== "__main__":
+    main()

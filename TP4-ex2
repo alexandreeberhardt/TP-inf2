@@ -1,6 +1,10 @@
 import csv
 
 class Etudiant:
+    """Classe Etudiant, qui représente un étudiant avec son nom(str), année de naissance(int), gpa(float), et connaissance de python(bool)
+    Il y a une methode to_dict qui crée un dictionnaire contenant les infos d'un étudiant
+    Il y a une methode from_dict qui instancie un étudiant à partir d'un dictionnaire
+    """
     def __init__(self, nom, annee_naissance, gpa, connais_python):
         self.nom = nom
         self.annee_naissance = annee_naissance
@@ -52,6 +56,7 @@ class Etudiant:
         self._connais_python = connais_python
 
     def to_dict(self):
+        #methode to_dict qui crée un dictionnaire contenant les infos d'un étudiant, renvoie un dictionnaire
         dico = {}
         dico["nom"] = self.nom
         dico["annee_naissance"] = self.annee_naissance
@@ -59,8 +64,12 @@ class Etudiant:
         dico["connais_python"] = self.connais_python
         return dico
 
+    #methode statique from_dict qui instancie un étudiant à partir d'un dictionnaire et qui retourne un étudiant
+    #On chosit une méthode statique par ce que l'on instancie un objet de la classe Etudiant grâce à cette fonction, il n'y a donc pas de sens de le faire avant
+
     @staticmethod
     def from_dict(di):
+
         nom = di["nom"]
         annee_naissance = int(di["annee_naissance"])
         gpa = float(di["gpa"])
@@ -70,11 +79,18 @@ class Etudiant:
 
 
 class Groupe:
+    """Classe Groupe qui représente une liste d'étudiants
+    Il y a une methode ajouter_etudiant
+    Il y a une methode sauvegarder_csv
+    Il y a une methode statique charger_csv
+    """
     def __init__(self, liste):
         self.liste = liste
+    #methode ajouter_etudiant qui permet d'ajouter un étudiant au groupe
 
     def ajouter_etudiant(self, etudiant):
         self.liste.append(etudiant)
+    #methode sauvegarder_csv qui enregistre le groupe dans un fichier csv
 
     def sauvegarder_csv(self, chemin):
         with open(chemin, 'w', newline='') as csvfile:
@@ -86,6 +102,8 @@ class Groupe:
                 dico = etudiant.to_dict()
                 writer.writerow({'nom': dico["nom"], 'annee_naissance': dico["annee_naissance"],
                                  'gpa': dico["gpa"], 'connais_python': dico["connais_python"]})
+    #methode statique charger_csv qui crée un groupe à partir d'un fichier csv
+    #On chosit une méthode statique par ce que l'on instancie un objet de la classe Groupe grâce à cette fonction, il n'y a donc pas de sens de le faire avant
 
     @staticmethod
     def charger_csv(chemin):

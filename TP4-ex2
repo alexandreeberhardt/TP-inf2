@@ -121,9 +121,9 @@ class Groupe:
 
 def main():
     etudiant1 = Etudiant("Leo", 2002, 4.2, True)
-    etudiant2 = Etudiant ("Alexandre", 2004, 5, True)
+    etudiant2 = Etudiant ("Alexandre", 2004, 5.0, True)
     etudiant3 = Etudiant("Juliette", 2000, 2.1, False)
-    etudiant4 = Etudiant ("Léa", 1998, 4, False)
+    etudiant4 = Etudiant ("Léa", 1998, 4.0, False)
     """data = {
     "nom": "Alexandre",
     "annee_naissance": 2003,
@@ -131,20 +131,20 @@ def main():
     "connais_python": True
     }
     alexandre = Etudiant.from_dict(data)"""
-    dict = etudiant1.to_dict ()
-    print (dict)
-    groupe = Group ([etudiant1, etudiant2, etudiant3, etudiant4])
-    etudiant5 = Etudiant.from_dict("arg", dict)
+    dictionnaire = etudiant1.to_dict ()
+    print (dictionnaire)
+    groupe = Groupe ([etudiant1, etudiant2, etudiant3, etudiant4])
+    etudiant5 = Etudiant.from_dict(dictionnaire)
     print (etudiant5)
     print (groupe)
-    groupe.sauvegarder_csv()
-    print (groupe.charger_csv ())
+    groupe.sauvegarder_csv("etudiants.csv")
+    print (groupe.charger_csv ("etudiants.csv"))
     #Exercice 3
     # sauvegarde du groupe d'etudiants dans un fichier binaire
     with open ("groupe-etudiants.pkl", "wb") as f:
         pickle. dump (groupe, f)
     # chargement du groupe d'etudiants a partir du fichier binaire
-    with open ("groupe-etudiants-pkl", "rb") as f:
+    with open ("groupe-etudiants.pkl", "rb") as f:
         nouveau_groupe_etudiants = pickle.load (f)
     #verification que le groupe ainsi charge est similaire au groupe d'origine
     print(str (groupe)==str (nouveau_groupe_etudiants))
@@ -163,3 +163,4 @@ groupe.sauvegarder_csv("etudiants.csv")
 v = Groupe([])
 v = v.charger_csv("etudiants.csv")
 print(v.liste)'''''
+

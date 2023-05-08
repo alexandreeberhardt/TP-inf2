@@ -77,6 +77,7 @@ class Etudiant:
         connais_python = bool(di["connais_python"])
 
         return Etudiant(nom, annee_naissance, gpa, connais_python)
+        #on ajoute une methode __eq__ pour pouvoir comparer deux etudiants avec ==, on verifie que chaque caracteristique est egale
 
     def __eq__(self, other):
         if isinstance(other, Etudiant):

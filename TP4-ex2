@@ -142,7 +142,7 @@ def main():
     #Exercice 3
     # sauvegarde du groupe d'etudiants dans un fichier binaire
     with open ("groupe-etudiants.pkl", "wb") as f:
-        pickle. dump (groupe, f)
+        pickle.dump(groupe, f)
     # chargement du groupe d'etudiants a partir du fichier binaire
     with open ("groupe-etudiants.pkl", "rb") as f:
         nouveau_groupe_etudiants = pickle.load (f)

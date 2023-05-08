@@ -78,6 +78,16 @@ class Etudiant:
 
         return Etudiant(nom, annee_naissance, gpa, connais_python)
 
+    def __eq__(self, other):
+        if isinstance(other, Etudiant):
+            return (
+                self.nom == other.nom
+                and self.annee_naissance == other.annee_naissance
+                and self.gpa == other.gpa
+                and self.connais_python == other.connais_python
+            )
+        return False
+
 
 class Groupe:
     """Classe Groupe qui represente une liste d'etudiants
@@ -137,8 +147,8 @@ def main():
     etudiant5 = Etudiant.from_dict(dictionnaire)
     print (etudiant5)
     print (groupe)
-    groupe.sauvegarder_csv("etudiants.csv")
-    print (groupe.charger_csv ("etudiants.csv"))
+    groupe.sauvegarder_csv("etudiant.csv")
+    print (groupe.charger_csv ("etudiant.csv"))
     #Exercice 3
     # sauvegarde du groupe d'etudiants dans un fichier binaire
     with open ("groupe-etudiants.pkl", "wb") as f:
@@ -147,7 +157,7 @@ def main():
     with open ("groupe-etudiants.pkl", "rb") as f:
         nouveau_groupe_etudiants = pickle.load (f)
     #verification que le groupe ainsi charge est similaire au groupe d'origine
-    print(str (groupe)==str (nouveau_groupe_etudiants))
+    print( groupe.liste == nouveau_groupe_etudiants.liste)
 
 if __name__== "__main__":
     main()

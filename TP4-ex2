@@ -1,4 +1,5 @@
 import csv
+import pickle
 
 class Etudiant:
     """Classe Etudiant, qui represente un etudiant avec son nom(str), annee de naissance(int), gpa(float), et connaissance de python(bool)
@@ -65,7 +66,7 @@ class Etudiant:
         return dico
 
     #methode statique from_dict qui instancie un etudiant à partir d'un dictionnaire et qui retourne un etudiant
-    #On chosit une methode statique par ce que l'on instancie un objet de la classe Etudiant grâce à cette fonction, il n'y a donc pas de sens de le faire avant
+    #On chosit une methode statique par ce que l'on instancie un objet de la classe Etudiant grace a cette fonction, il n'y a donc pas de sens de le faire avant
 
     @staticmethod
     def from_dict(di):
@@ -102,8 +103,8 @@ class Groupe:
                 dico = etudiant.to_dict()
                 writer.writerow({'nom': dico["nom"], 'annee_naissance': dico["annee_naissance"],
                                  'gpa': dico["gpa"], 'connais_python': dico["connais_python"]})
-    #methode statique charger_csv qui cree un groupe à partir d'un fichier csv
-    #On chosit une methode statique par ce que l'on instancie un objet de la classe Groupe grâce à cette fonction, il n'y a donc pas de sens de le faire avant
+    #methode statique charger_csv qui cree un groupe a partir d'un fichier csv
+    #On chosit une methode statique par ce que l'on instancie un objet de la classe Groupe grace a cette fonction, il n'y a donc pas de sens de le faire avant
 
     @staticmethod
     def charger_csv(chemin):
@@ -117,16 +118,42 @@ class Groupe:
 
         return Groupe(liste)
 
-groupe = Groupe([])
-etudiant1 = Etudiant("Dupont", 2003, 2.5, True)
-etudiant2 = Etudiant("Martin", 2002, 2.0, False)
-data = {
+
+def main():
+    etudiant1 = Etudiant("Leo", 2002, 4.2, True)
+    etudiant2 = Etudiant ("Alexandre", 2004, 5, True)
+    etudiant3 = Etudiant("Juliette", 2000, 2.1, False)
+    etudiant4 = Etudiant ("Léa", 1998, 4, False)
+    """data = {
     "nom": "Alexandre",
     "annee_naissance": 2003,
     "gpa": 5.0,
     "connais_python": True
-}
-alexandre = Etudiant.from_dict(data)
+    }
+    alexandre = Etudiant.from_dict(data)"""
+    dict = etudiant1.to_dict ()
+    print (dict)
+    groupe = Group ([etudiant1, etudiant2, etudiant3, etudiant4])
+    etudiant5 = Etudiant.from_dict("arg", dict)
+    print (etudiant5)
+    print (groupe)
+    groupe.sauvegarder_csv()
+    print (groupe.charger_csv ())
+    #Exercice 3
+    # sauvegarde du groupe d'etudiants dans un fichier binaire
+    with open ("groupe-etudiants.pkl", "wb") as f:
+        pickle. dump (groupe, f)
+    # chargement du groupe d'etudiants a partir du fichier binaire
+    with open ("groupe-etudiants-pkl", "rb") as f:
+        nouveau_groupe_etudiants = pickle.load (f)
+    #verification que le groupe ainsi charge est similaire au groupe d'origine
+    print(str (groupe)==str (nouveau_groupe_etudiants))
+
+if __name__== "__main__":
+    main()
+
+
+'''alexandre = Etudiant.from_dict(data)
 
 groupe.ajouter_etudiant(etudiant1)
 groupe.ajouter_etudiant(etudiant2)
@@ -135,4 +162,4 @@ groupe.sauvegarder_csv("etudiants.csv")
 
 v = Groupe([])
 v = v.charger_csv("etudiants.csv")
-print(v.liste)
+print(v.liste)'''''

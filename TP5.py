@@ -122,7 +122,9 @@ class Fenetre(Tk):
         self.str_operation = self.str_operation.replace('x²', '**2').replace('√x', 'sqrt')
         try:
             resultat = eval(self.str_operation)
-            print(f" {self.str_operation} = {self.ecran.insert(END, resultat)}")
+            resultat_a_afficher = " = "+str(resultat)
+            self.ecran.insert(END, resultat_a_afficher)
+            self.str_operation=""
         except ZeroDivisionError:
             print("Error")
         except ValueError:
@@ -131,7 +133,7 @@ class Fenetre(Tk):
             print("Error")
 
     def clear(self):
-        self.str_operation = self.ecran.get()
+        self.str_operation = ""
         self.ecran.delete(0, END)
 
     def fleche(self, sens):
@@ -153,5 +155,12 @@ if __name__ == '__main__':
 
 
 
+
+def main():
+    ma_fenetre=Fenetre()
+    ma_fenetre.mainloop()
+
+if __name__ == '__main__':
+ main()
 
 

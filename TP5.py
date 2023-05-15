@@ -18,16 +18,16 @@ class Fenetre(Tk):
         self.config(bg='black')
         self.eval('tk::PlaceWindow . center')
         self.str_operation = "" # str qui permet rStocker les opérations
-        Label(self,text="Calculatrice d'Alexandre et Léo",fg='white',bg='black').pack()
+        Label(self,text="Calculatrice d'Alexandre et Léo",fg='white',bg='black').grid(row=0, column=3, padx=10,pady=15)
         self.operation = StringVar()
         self.operation.set('')
         self.build()
 
     def build(self):
-        parametre_bouton_nombre = {bd : '10', bg : 'white', fg : 'black'}
-        parametre_bouton_calcul = {bd : '10', bg : 'yellow', fg : 'black'}
-        parametre_bouton_clear = {bd : '10',bg: 'green',fg : 'black'}
-        parametre_bouton_egal = {bd : '10',bg: 'red',fg : 'black'}
+        parametre_bouton_nombre = {"bd" : '10', "bg" : 'white', "fg" : 'black'}
+        parametre_bouton_calcul = {"bd" : '10', "bg" : 'yellow', "fg" : 'black'}
+        parametre_bouton_clear = {"bd" : '10',"bg": 'green',"fg" : 'black'}
+        parametre_bouton_egal = {"bd" : '10',"bg": 'red',"fg" : 'black'}
 
         frame = Frame(self)
         frame.grid()
@@ -74,16 +74,16 @@ class Fenetre(Tk):
         self.operation += str(car)
         self.operation.set(self.str_operation)
 
-    def calculer(self):
+   # def calculer(self):
 
 
-    def clear(self):
+   # def clear(self):
 
 
-    def fleche(self,sens):
+   # def fleche(self,sens):
 
 
-    def supp(self):
+   # def supp(self):
 
 
 

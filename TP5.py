@@ -2,7 +2,6 @@ from tkinter import Button, Entry, Label, Tk, END, Frame
 from math import sin, tan, cos, sqrt, pi
 class Fenetre(Tk):
     historique = []
-    nb = 0
 
     def __init__(self):
         Tk.__init__(self)

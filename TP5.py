@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Button, Entry, Label, Tk, END, Frame
 from math import sin, tan, cos, sqrt, pi
 class Fenetre(Tk):
     historique = []
@@ -10,8 +10,8 @@ class Fenetre(Tk):
         self.label = None'''
         ecran_x = self.winfo_screenwidth()
         ecran_y = self.winfo_screenheight()
-        l = 720
-        h = 480
+        l = 200
+        h = 280
         pos_x = ecran_x // 2 - l // 2
         pos_y = ecran_y // 2 - h // 2
         geometrie = f"{l}x{h}+{pos_x}+{pos_y}"
@@ -25,6 +25,7 @@ class Fenetre(Tk):
         self.create_ecran()
         self.create_label()
         self.build()
+
 
     def build(self):
         parametre_bouton_nombre = {'bd': '4', 'bg': '#778da9', 'fg': 'white'}
@@ -75,32 +76,37 @@ class Fenetre(Tk):
 
     def create_ecran(self):
         self.ecran = Entry(text="", bg='white', fg='black')
-        self.ecran.grid(row=1,column=0,columnspan=4)
+        self.ecran.grid(row=1,column=0,columnspan=6,sticky='nsew')
 
     def create_label(self):
-        self.label = Label(text='Calculator3000',fg='white',bg='black')
-        self.label.grid(row=0,column=0,columnspan=4)
+        self.label = Label(text='Calculator3000',fg='yellow',bg='black')
+        self.label.grid(row=0,column=0,columnspan=6,sticky='nsew')
 
     def ajouter(self,car):
-        Fenetre.nb = 0
-        self.operation += str(car)
-        self.operation.set(self.str_operation)
+        self.ecran.insert(END,car)
 
-    '''def calculer(self):
-        try:
-            calcul = self.str_operation.replace('x²','**2').replace('√x','sqrt')
-            r = round(eval(calcul),5)
-            self.str_operation += str(f'{r}')
-            self.operation.set(self.str_operation)
-            Fenetre.historique.append(self.str_operation)
-
+    def calculer(self):
+        expression = self.ecran.get()
+        self.historique.append(expression)
+        expression = expression.replace('x²','**2').replace('√x','sqrt')
+        try :
+            resultat = eval(expression)
+            print(f" {expression} = {self.ecran.insert(END, resultat)}")    
+        except ZeroDivisionError:
+            print("Error")
+        except ValueError:
+            print("Error")
+        except SyntaxError:
+            print("Error")   
+        
+        
     def clear(self):
 
 
     def fleche(self,sens):
 
 
-    def supp(self):'''
+    def supp(self):
 
 
 

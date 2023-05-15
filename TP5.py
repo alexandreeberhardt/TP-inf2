@@ -112,6 +112,7 @@ class Fenetre(Tk):
         self.label.grid(row=0, column=0, columnspan=6, sticky='nsew')
 
     def ajouter(self, car):
+        Fenetre.nb = 0
         self.str_operation += str(car)
         self.ecran.delete(0, END)
         self.ecran.insert(END, self.str_operation)
@@ -137,19 +138,27 @@ class Fenetre(Tk):
         self.ecran.delete(0, END)
 
     def fleche(self, sens):
-        pass
+        if sens == '↑':
+            Fenetre.nb += 1
+            self.str_operation = Fenetre.historique[-Fenetre.nb%len(Fenetre.historique)]
+            self.ecran.delete(0, END)
+            self.ecran.insert(END, self.str_operation)
+        elif sens == '↓':
+
+            Fenetre.nb -= 1
+            self.str_operation = Fenetre.historique[-Fenetre.nb%len(Fenetre.historique)]
+            self.ecran.delete(0, END)
+            self.ecran.insert(END, self.str_operation)
+
 
     def supp(self):
         self.str_operation = self.str_operation[:-1]
         self.ecran.delete(0, END)
         self.ecran.insert(END, self.str_operation)
 
-
 def main():
     ma_fenetre = Fenetre()
     ma_fenetre.mainloop()
 
-
 if __name__ == '__main__':
     main()
-

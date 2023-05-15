@@ -72,9 +72,9 @@ class Fenetre(Tk):
                                                                                                      padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='tan', command=lambda: self.ajouter('tan')).grid(row=3, column=5,
                                                                                                      padx=5, pady=10)
-        Button(frame, parametre_bouton_calcul, text='cos', command=lambda: self.ajouter('cos')).grid(row=4, column=5,
+        Button(frame, parametre_bouton_calcul, text='cos', command=lambda: self.ajouter('cos(')).grid(row=4, column=5,
                                                                                                      padx=5, pady=10)
-        Button(frame, parametre_bouton_calcul, text='x^2', command=lambda: self.ajouter('x²')).grid(row=5, column=5,
+        Button(frame, parametre_bouton_calcul, text='x^2', command=lambda: self.ajouter('²')).grid(row=5, column=5,
                                                                                                     padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='√x', command=lambda: self.ajouter('√x')).grid(row=6, column=5,
                                                                                                    padx=5, pady=10)
@@ -119,7 +119,7 @@ class Fenetre(Tk):
     def calculer(self):
 
         self.historique.append(self.str_operation)
-        self.str_operation = self.str_operation.replace('x²', '**2').replace('√x', 'sqrt')
+        self.str_operation = self.str_operation.replace('²', '**2').replace('√x', 'sqrt')
         try:
             resultat = eval(self.str_operation)
             resultat_a_afficher = " = "+str(resultat)
@@ -152,15 +152,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-def main():
-    ma_fenetre=Fenetre()
-    ma_fenetre.mainloop()
-
-if __name__ == '__main__':
- main()
-
 

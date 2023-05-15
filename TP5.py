@@ -68,9 +68,9 @@ class Fenetre(Tk):
                                                                                                  padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='/', command=lambda: self.ajouter('/')).grid(row=5, column=4,
                                                                                                  padx=5, pady=10)
-        Button(frame, parametre_bouton_calcul, text='sin', command=lambda: self.ajouter('sin')).grid(row=2, column=5,
+        Button(frame, parametre_bouton_calcul, text='sin', command=lambda: self.ajouter('sin(')).grid(row=2, column=5,
                                                                                                      padx=5, pady=10)
-        Button(frame, parametre_bouton_calcul, text='tan', command=lambda: self.ajouter('tan')).grid(row=3, column=5,
+        Button(frame, parametre_bouton_calcul, text='tan', command=lambda: self.ajouter('tan(')).grid(row=3, column=5,
                                                                                                      padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='cos', command=lambda: self.ajouter('cos(')).grid(row=4, column=5,
                                                                                                      padx=5, pady=10)

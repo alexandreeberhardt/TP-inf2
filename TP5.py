@@ -6,6 +6,8 @@ class Fenetre(Tk):
 
     def __init__(self):
         Tk.__init__(self)
+        '''self.ecran = None
+        self.label = None'''
         ecran_x = self.winfo_screenwidth()
         ecran_y = self.winfo_screenheight()
         l = 720
@@ -17,17 +19,18 @@ class Fenetre(Tk):
         self.title("TP Calculatrice")
         self.config(bg='black')
         self.eval('tk::PlaceWindow . center')
-        self.str_operation = "" # str qui permet rStocker les opérations
-        Label(self,text="Calculatrice d'Alexandre et Léo",fg='white',bg='black').grid(row=0,column=3,padx=10,pady=10)
-        self.operation = StringVar()
-        self.operation.set('')
+        self.str_operation = "" # str qui permet de stocker les opérations
+        '''self.operation = StringVar()
+        self.operation.set('')'''
+        self.create_ecran()
+        self.create_label()
         self.build()
 
     def build(self):
-        parametre_bouton_nombre = {'bd' : '4', 'bg' : '#778da9', 'fg' : 'white'}
-        parametre_bouton_calcul = {'bd' : '2', 'bg' : '#9f86c0', 'fg' : 'black'}
-        parametre_bouton_clear = {'bd': '2','bg': '#4cc9f0','fg' : 'black'}
-        parametre_bouton_egal = {'bd' : '2','bg': '#fbf8cc','fg' : 'black'}
+        parametre_bouton_nombre = {'bd': '4', 'bg': '#778da9', 'fg': 'white'}
+        parametre_bouton_calcul = {'bd': '2', 'bg': '#9f86c0', 'fg': 'black'}
+        parametre_bouton_clear = {'bd': '2', 'bg': '#4cc9f0', 'fg': 'black'}
+        parametre_bouton_egal = {'bd': '2', 'bg': '#fbf8cc', 'fg': 'black'}
 
         frame = Frame(self)
         frame.grid()
@@ -55,20 +58,29 @@ class Fenetre(Tk):
         Button(frame,parametre_bouton_calcul, text='cos', command=lambda: self.ajouter('cos')).grid(row=4, column=5, padx=5, pady=10)
         Button(frame,parametre_bouton_calcul, text='x^2', command=lambda: self.ajouter('x²')).grid(row=5, column=5, padx=5, pady=10)
         Button(frame,parametre_bouton_calcul, text='√x', command=lambda: self.ajouter('√x')).grid(row=6, column=5, padx=5, pady=10)
-        Button(frame,parametre_bouton_calcul, text='π', command=lambda: self.ajouter(str(round(pi,4)))).grid(row=6, column=4, padx=5, pady=10)
+        Button(frame,parametre_bouton_calcul, text='π', command=lambda: self.ajouter(str(round(pi,6)))).grid(row=6, column=4, padx=5, pady=10)
 
         #Bouton clear et egal
         Button(frame,parametre_bouton_clear, text='C', command=lambda: self.clear()).grid(row=2, column=0, padx=5, pady=10)
         Button(frame,parametre_bouton_egal,text = '=', command=lambda : self.calculer()).grid(row = 6, column = 0,padx=5, pady=10)
 
         #Parenthèses
-        Button(frame,parametre_bouton_egal,text = '(', command=lambda : self.ajouter('(')).grid(row = 2, column = 1,padx=5, pady=10)
-        Button(frame,parametre_bouton_egal,text = ')', command=lambda : self.ajouter(')')).grid(row = 2, column = 2,padx=5, pady=10)
+        Button(frame,parametre_bouton_calcul,text = '(', command=lambda : self.ajouter('(')).grid(row = 2, column = 1,padx=5, pady=10)
+        Button(frame,parametre_bouton_calcul,text = ')', command=lambda : self.ajouter(')')).grid(row = 2, column = 2,padx=5, pady=10)
 
         #Fleches
         Button(frame,parametre_bouton_egal,text = '←', command=lambda : self.supp()).grid(row = 3, column = 6,padx=5, pady=10)
         Button(frame,parametre_bouton_egal,text = '↑', command=lambda : self.fleche('↑')).grid(row = 4, column = 6,padx=5, pady=10)
         Button(frame,parametre_bouton_egal,text = '↓', command=lambda : self.fleche('↓')).grid(row = 5, column = 6,padx=5, pady=10)
+
+    def create_ecran(self):
+        self.ecran = Entry(text="", bg='white', fg='black')
+        self.ecran.grid(row=1,column=0,columnspan=4)
+
+    def create_label(self):
+        self.label = Label(text='Calculator3000',fg='white',bg='black')
+        self.label.grid(row=0,column=0,columnspan=4)
+
     def ajouter(self,car):
         Fenetre.nb = 0
         self.operation += str(car)
@@ -77,7 +89,10 @@ class Fenetre(Tk):
     '''def calculer(self):
         try:
             calcul = self.str_operation.replace('x²','**2').replace('√x','sqrt')
-
+            r = round(eval(calcul),5)
+            self.str_operation += str(f'{r}')
+            self.operation.set(self.str_operation)
+            Fenetre.historique.append(self.str_operation)
 
     def clear(self):
 

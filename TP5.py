@@ -24,10 +24,10 @@ class Fenetre(Tk):
         self.build()
 
     def build(self):
-        parametre_bouton_nombre = {'bd' : '10', 'bg' : 'white', 'fg' : 'black'}
-        parametre_bouton_calcul = {'bd' : '10', 'bg' : 'yellow', 'fg' : 'black'}
-        parametre_bouton_clear = {'bd': '10','bg': 'green','fg' : 'black'}
-        parametre_bouton_egal = {'bd' : '10','bg': 'red','fg' : 'black'}
+        parametre_bouton_nombre = {'bd' : '4', 'bg' : '#778da9', 'fg' : 'white'}
+        parametre_bouton_calcul = {'bd' : '2', 'bg' : '#9f86c0', 'fg' : 'black'}
+        parametre_bouton_clear = {'bd': '2','bg': '#4cc9f0','fg' : 'black'}
+        parametre_bouton_egal = {'bd' : '2','bg': '#fbf8cc','fg' : 'black'}
 
         frame = Frame(self)
         frame.grid()

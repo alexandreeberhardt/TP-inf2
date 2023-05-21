@@ -1,22 +1,15 @@
 '''Choix d'implémentation
-En ce qui est de l'interface graphique, nous avons opté pour des couleurs pastels (simple choix personnel n'aimant pas
-les couleurs de "base"
+En ce qui est de l'interface graphique, nous avons opté pour des couleurs pastelles (simple choix personnel n'aimant pas les couleurs de "base")
 Ensuite, nous avons implémenté les boutons demandés par l'énoncé puis nous avons décidé d'ajouter 2 nouvelles
-fonctionnalités : les parenthèses de calcul ainsi qu'un bouton supprimer le dernier élément. Les boutons sont placés
-de la sorte pour permettre une plus grande ergonomie et compréhension
-Ces choix ont été réalisé puisque l'ajout des parenthèses permet de nombreuses facilités pour éviter les erreurs de
-calcul mais aussi pour utiliser des outils plus complexes comme le calcul d'une racine par exemple
-De plus lors de l'activation d'un bouton de calcul nous avons fait le choix d'ajouter directement une parenthèse (si
-on appuie sur cos on aura cos( pour éviter tout soucis d'ambigüité et l'utilisateur saura qu'il faut qu'il rajoute
-une parenthèse fermante en fin d'expression sinon il aura une erreur.
-En ce qui est du bouton supprimer le dernier élément, ce bouton est intéressant pour rendre ergonomique la calculatrice
-si jamais l'utilisateur se trompe dans le calcul qu'il souhaite effectuer.
+fonctionnalités : les parenthèses de calcul ainsi qu'un bouton "supprimer le dernier élément". Les boutons sont placés pour permettre une plus grande ergonomie et compréhension
+Nous avons aussi ajouté des parenthèses car cela permet d'éviter les erreurs de
+calcul mais aussi d'utiliser des outils plus complexes comme le calcul d'une racine par exemple
+De plus lors de l'activation d'un bouton de calcul nous avons fait le choix d'ajouter directement une parenthèse ouvrante. Si on appuie sur cos on aura "cos(" pour éviter tout soucis d'ambigüité et l'utilisateur saura qu'il faut qu'il rajoute une parenthèse fermante en fin d'expression sinon il aura une erreur.
+En ce qui est du bouton supprimer le dernier élément, ce bouton est intéressant pour rendre ergonomique la calculatrice si jamais l'utilisateur se trompe dans le calcul qu'il souhaite effectuer.
 
-Nous avons aussi choisi d'utiliser la fonction eval de python pour faire les calculs puisuqe qu'elle prend en compte
-les priorités de calcul.
+Nous avons aussi choisi d'utiliser la fonction eval de python pour faire les calculs car elle prend en compte les priorités de calcul.
 
-L'historique effectue un cycle pour éviter de se bloquer, ceci est un choix personnel pour ne pas avoir d'erreur mais
-il est tout a fait possible de l'implémenter de sorte à ce qu'il s'arrête au premier calcul.
+L'historique effectue un cycle pour éviter de se bloquer, ceci est un choix personnel pour revenir plus simplement sur tous les calculs effectués mais il est tout a fait possible de l'implémenter de sorte à ce qu'il s'arrête au premier calcul (dans l'ordre chrnologique).
 '''
 
 from tkinter import Button, Entry, Label, Tk, END, Frame #On importe le module tkinter avec chaque fonctionnalité utilisée pour éviter de faire un import* (éviter les confusions)
@@ -92,8 +85,8 @@ class Fenetre(Tk):
                                                                                                  padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='/', command=lambda: self.ajouter('/')).grid(row=5, column=4,
                                                                                                  padx=5, pady=10)
-        Button(frame, parametre_bouton_calcul, text='sin', command=lambda: self.ajouter('sin')).grid(row=2, column=5,
-                                                                                                      padx=5, pady=10)
+        Button(frame, parametre_bouton_calcul, text='sin', command=lambda: self.ajouter('sin(')).grid(row=2, column=5,
+                                                                                                     padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='tan', command=lambda: self.ajouter('tan(')).grid(row=3, column=5,
                                                                                                       padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='cos', command=lambda: self.ajouter('cos(')).grid(row=4, column=5,

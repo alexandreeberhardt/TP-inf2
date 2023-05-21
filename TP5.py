@@ -53,12 +53,13 @@ class Fenetre(Tk):
 
         frame = Frame(self)
         frame.grid()
-        # boutons chiffre
-        Button(frame, parametre_bouton_nombre, text='1', command=lambda: self.ajouter('1')).grid(row=3, column=0,
+        '''boutons chiffre - Nous avons choisi de les placer dans l'ordre décroissant comme les calculatrices sur les 
+        téléphones pour que ce soit plus instinctif. '''
+        Button(frame, parametre_bouton_nombre, text='7', command=lambda: self.ajouter('7')).grid(row=3, column=0,
                                                                                                  padx=5, pady=10)
-        Button(frame, parametre_bouton_nombre, text='2', command=lambda: self.ajouter('2')).grid(row=3, column=1,
+        Button(frame, parametre_bouton_nombre, text='8', command=lambda: self.ajouter('8')).grid(row=3, column=1,
                                                                                                  padx=5, pady=10)
-        Button(frame, parametre_bouton_nombre, text='3', command=lambda: self.ajouter('3')).grid(row=3, column=2,
+        Button(frame, parametre_bouton_nombre, text='9', command=lambda: self.ajouter('9')).grid(row=3, column=2,
                                                                                                  padx=5, pady=10)
         Button(frame, parametre_bouton_nombre, text='4', command=lambda: self.ajouter('4')).grid(row=4, column=0,
                                                                                                  padx=5, pady=10)
@@ -66,11 +67,11 @@ class Fenetre(Tk):
                                                                                                  padx=5, pady=10)
         Button(frame, parametre_bouton_nombre, text='6', command=lambda: self.ajouter('6')).grid(row=4, column=2,
                                                                                                  padx=5, pady=10)
-        Button(frame, parametre_bouton_nombre, text='7', command=lambda: self.ajouter('7')).grid(row=5, column=0,
+        Button(frame, parametre_bouton_nombre, text='1', command=lambda: self.ajouter('1')).grid(row=5, column=0,
                                                                                                  padx=5, pady=10)
-        Button(frame, parametre_bouton_nombre, text='8', command=lambda: self.ajouter('8')).grid(row=5, column=1,
+        Button(frame, parametre_bouton_nombre, text='2', command=lambda: self.ajouter('2')).grid(row=5, column=1,
                                                                                                  padx=5, pady=10)
-        Button(frame, parametre_bouton_nombre, text='9', command=lambda: self.ajouter('9')).grid(row=5, column=2,
+        Button(frame, parametre_bouton_nombre, text='3', command=lambda: self.ajouter('3')).grid(row=5, column=2,
                                                                                                  padx=5, pady=10)
         Button(frame, parametre_bouton_nombre, text='0', command=lambda: self.ajouter('0')).grid(row=6, column=1,
                                                                                                  padx=5, pady=10)

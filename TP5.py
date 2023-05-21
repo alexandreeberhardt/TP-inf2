@@ -53,8 +53,7 @@ class Fenetre(Tk):
 
         frame = Frame(self)
         frame.grid()
-        '''boutons chiffre - Nous avons choisi de les placer dans l'ordre décroissant comme les calculatrices sur les 
-        téléphones pour que ce soit plus instinctif. '''
+        '''boutons chiffre - Nous avons choisi de les placer dans l'ordre décroissant comme sur les calculatrices normales pour que ce soit plus instinctif. '''
         Button(frame, parametre_bouton_nombre, text='7', command=lambda: self.ajouter('7')).grid(row=3, column=0,
                                                                                                  padx=5, pady=10)
         Button(frame, parametre_bouton_nombre, text='8', command=lambda: self.ajouter('8')).grid(row=3, column=1,

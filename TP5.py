@@ -10,6 +10,7 @@ En ce qui est du bouton supprimer le dernier élément, ce bouton est intéressa
 Nous avons aussi choisi d'utiliser la fonction eval de python pour faire les calculs car elle prend en compte les priorités de calcul.
 
 L'historique effectue un cycle pour éviter de se bloquer, ceci est un choix personnel pour revenir plus simplement sur tous les calculs effectués mais il est tout a fait possible de l'implémenter de sorte à ce qu'il s'arrête au premier calcul (dans l'ordre chrnologique).
+Nous avons fixé la taille de la fenêtre pour qu'elle soit adaptée à un mac, car la calculatrice pour windows est plus petite, elle est donc sure de rentrer dans la fenêtre. Le seul désaventage est de laisser un bord noir pour les utilisateurs windows mais nous preferons ça plutôt que de cacher une partie de la calculatrice aux utilisateurs de mac.
 '''
 
 from tkinter import Button, Entry, Label, Tk, END, Frame #On importe le module tkinter avec chaque fonctionnalité utilisée pour éviter de faire un import* (éviter les confusions)

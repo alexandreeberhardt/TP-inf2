@@ -1,17 +1,41 @@
-from tkinter import Button, Entry, Label, Tk, END, Frame
-from math import sin, tan, cos, sqrt, pi
+'''Choix d'implémentation
+En ce qui est de l'interface graphique, nous avons opté pour des couleurs pastels (simple choix personnel n'aimant pas
+les couleurs de "base"
+Ensuite, nous avons implémenté les boutons demandés par l'énoncé puis nous avons décidé d'ajouter 2 nouvelles
+fonctionnalités : les parenthèses de calcul ainsi qu'un bouton supprimer le dernier élément. Les boutons sont placés
+de la sorte pour permettre une plus grande ergonomie et compréhension
+Ces choix ont été réalisé puisque l'ajout des parenthèses permet de nombreuses facilités pour éviter les erreurs de
+calcul mais aussi pour utiliser des outils plus complexes comme le calcul d'une racine par exemple
+De plus lors de l'activation d'un bouton de calcul nous avons fait le choix d'ajouter directement une parenthèse (si
+on appuie sur cos on aura cos( pour éviter tout soucis d'ambigüité et l'utilisateur saura qu'il faut qu'il rajoute
+une parenthèse fermante en fin d'expression sinon il aura une erreur.
+En ce qui est du bouton supprimer le dernier élément, ce bouton est intéressant pour rendre ergonomique la calculatrice
+si jamais l'utilisateur se trompe dans le calcul qu'il souhaite effectuer.
+
+Nous avons aussi choisi d'utiliser la fonction eval de python pour faire les calculs puisuqe qu'elle prend en compte
+les priorités de calcul.
+
+L'historique effectue un cycle pour éviter de se bloquer, ceci est un choix personnel pour ne pas avoir d'erreur mais
+il est tout a fait possible de l'implémenter de sorte à ce qu'il s'arrête au premier calcul.
+'''
+
+from tkinter import Button, Entry, Label, Tk, END, Frame #On importe le module tkinter avec chaque fonctionnalité utilisée pour éviter de faire un import* (éviter les confusions)
+from math import sin, tan, cos, sqrt, pi # Pareil que le tkinter
 
 
 class Fenetre(Tk):
+    '''La classe fenêtre contient le nom de la calculatrice l'écran les boutons et tout les méthodes pour son
+    fonctionnement'''
     historique = []
+    nb = 0
 
-    def __init__(self):
+    def __init__(self): #Constructeur qui répertorie toutes les méthodes
         Tk.__init__(self)
         '''self.ecran = None
         self.label = None'''
         ecran_x = self.winfo_screenwidth()
         ecran_y = self.winfo_screenheight()
-        l = 200
+        l = 340
         h = 280
         pos_x = ecran_x // 2 - l // 2
         pos_y = ecran_y // 2 - h // 2
@@ -27,15 +51,15 @@ class Fenetre(Tk):
         self.create_label()
         self.build()
 
-    def build(self):
-        parametre_bouton_nombre = {'bd': '4', 'bg': '#778da9', 'fg': 'white'}
+    def build(self): # Construction de la calculatrice
+        parametre_bouton_nombre = {'bd': '4', 'bg': '#778da9', 'fg': 'white'} # Dictionnaire de paramètres pour enregistrer les caractèristiques de chaque bouton pour économiser les lignes de code
         parametre_bouton_calcul = {'bd': '2', 'bg': '#9f86c0', 'fg': 'black'}
         parametre_bouton_clear = {'bd': '2', 'bg': '#4cc9f0', 'fg': 'black'}
         parametre_bouton_egal = {'bd': '2', 'bg': '#fbf8cc', 'fg': 'black'}
 
         frame = Frame(self)
         frame.grid()
-        # Nombre
+        # boutons chiffre
         Button(frame, parametre_bouton_nombre, text='1', command=lambda: self.ajouter('1')).grid(row=3, column=0,
                                                                                                  padx=5, pady=10)
         Button(frame, parametre_bouton_nombre, text='2', command=lambda: self.ajouter('2')).grid(row=3, column=1,
@@ -68,14 +92,14 @@ class Fenetre(Tk):
                                                                                                  padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='/', command=lambda: self.ajouter('/')).grid(row=5, column=4,
                                                                                                  padx=5, pady=10)
-        Button(frame, parametre_bouton_calcul, text='sin', command=lambda: self.ajouter('sin(')).grid(row=2, column=5,
-                                                                                                     padx=5, pady=10)
+        Button(frame, parametre_bouton_calcul, text='sin', command=lambda: self.ajouter('sin')).grid(row=2, column=5,
+                                                                                                      padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='tan', command=lambda: self.ajouter('tan(')).grid(row=3, column=5,
-                                                                                                     padx=5, pady=10)
+                                                                                                      padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='cos', command=lambda: self.ajouter('cos(')).grid(row=4, column=5,
-                                                                                                     padx=5, pady=10)
+                                                                                                      padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='x^2', command=lambda: self.ajouter('²')).grid(row=5, column=5,
-                                                                                                    padx=5, pady=10)
+                                                                                                   padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='√x', command=lambda: self.ajouter('√(')).grid(row=6, column=5,
                                                                                                    padx=5, pady=10)
         Button(frame, parametre_bouton_calcul, text='π', command=lambda: self.ajouter(str(round(pi, 6)))).grid(row=6,
@@ -104,61 +128,81 @@ class Fenetre(Tk):
                                                                                               pady=10)
 
     def create_ecran(self):
+        '''Creation de l'écran de calcul'''
         self.ecran = Entry(text="", bg='white', fg='black')
         self.ecran.grid(row=1, column=0, columnspan=6, sticky='nsew')
 
     def create_label(self):
+        '''Création du nom de la calculatrice'''
         self.label = Label(text='Calculator3000', fg='yellow', bg='black')
         self.label.grid(row=0, column=0, columnspan=6, sticky='nsew')
 
     def ajouter(self, car):
+        '''Ajout de chaque caractère saisi par les boutons'''
         Fenetre.nb = 0
         self.str_operation += str(car)
-        self.ecran.delete(0, END)
+        self.ecran.delete(0, END) # Supprimer ce qui est écrit à l'écran avant d'ajouter les nouvelles valeurs
         self.ecran.insert(END, self.str_operation)
 
     def calculer(self):
-
-        self.historique.append(self.str_operation)
+        '''Permet de calculer ce que l'utilisateur demande'''
+        self.historique.append(self.str_operation) #On ajoute à l'historique le calcul
         self.str_operation = self.str_operation.replace('²', '**2').replace('√', 'sqrt')
         try:
-            resultat = eval(self.str_operation)
-            resultat_a_afficher = " = "+str(resultat)
-            self.ecran.insert(END, resultat_a_afficher)
-            self.str_operation=""
+            resultat = eval(self.str_operation) # Fonction eval de python pour calculer la demande de l'utilisateur
+            resultat_a_afficher = " = " + str(resultat)
+            '''Traitement des exceptions qui renvoient une erreur si jamais une exception est relevée'''
         except ZeroDivisionError:
-            print("Error")
+            resultat_a_afficher = " = Erreur math"
         except ValueError:
-            print("Error")
+            resultat_a_afficher = " = Erreur math"
         except SyntaxError:
-            print("Error")
+            resultat_a_afficher = " = Erreur math"
+        self.str_operation = ""
+        self.ecran.insert(END, resultat_a_afficher)
 
     def clear(self):
+        '''Remet l'écran vide si jamais le bouton C est pressé'''
         self.str_operation = ""
         self.ecran.delete(0, END)
 
     def fleche(self, sens):
-        if sens == '↑':
+        if sens == '↑': #Permet de revenir au calcul précédent (historique)
             Fenetre.nb += 1
-            self.str_operation = Fenetre.historique[-Fenetre.nb%len(Fenetre.historique)]
+            self.str_operation = Fenetre.historique[-Fenetre.nb % len(Fenetre.historique)]
             self.ecran.delete(0, END)
             self.ecran.insert(END, self.str_operation)
-        elif sens == '↓':
-
+        elif sens == '↓': #Permet de passer au calcul suivant si une navigation dans l'historique a été faite
             Fenetre.nb -= 1
-            self.str_operation = Fenetre.historique[-Fenetre.nb%len(Fenetre.historique)]
+            self.str_operation = Fenetre.historique[-Fenetre.nb % len(Fenetre.historique)]
             self.ecran.delete(0, END)
             self.ecran.insert(END, self.str_operation)
-
 
     def supp(self):
+        '''Permet de supprimer le dernier élément saisi'''
         self.str_operation = self.str_operation[:-1]
         self.ecran.delete(0, END)
         self.ecran.insert(END, self.str_operation)
 
+
+    '''def calcul_et_fonction(self):
+        self.str_operation = self.ecran.get()
+        try:
+            resultat = eval(self.str_operation)
+            self.ajouter(resultat)
+        except ValueError:
+            self.set_screen("Error Math")
+            
+            Piste abandonnée, nous avons essayé de créer une fonction qui pouvait permettre d'activer une fonction
+            au toucher d'un bouton. Cela signifie qu'il aura simplement fallu d'appuyer sur cos et le résultat serait 
+            diretement apparu. Cependant nous n'avons pas réussi.
+            '''
+
+
 def main():
     ma_fenetre = Fenetre()
     ma_fenetre.mainloop()
+
 
 if __name__ == '__main__':
     main()

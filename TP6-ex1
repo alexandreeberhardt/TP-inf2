@@ -1,0 +1,29 @@
+import pickle
+
+import numpy as np
+import matplotlib.pyplot as plt
+from math import sqrt
+import scipy
+data = np.load('temperatures.npy')
+temperature_reelle = data[:, 0]
+temperature_mesuree = data[:, 1]*10-10
+indices = np.arange(len(temperature_reelle))
+difference_mesure_reele = temperature_mesuree-temperature_reelle
+RSME_mesure_relle = sqrt(np.sum(difference_mesure_reele)/len(temperature_reelle))
+temperature_mesuree_lissee=scipy.signal.medfilt(temperature_mesuree)
+difference_lissee_reele = temperature_mesuree_lissee-temperature_reelle
+RSME_lisse_reele = sqrt(np.sum(difference_lissee_reele)/len(temperature_reelle))
+
+if __name__ == '__main__':
+
+    plt.plot(indices,temperature_reelle,label="temperature réelle")
+    plt.plot(indices,temperature_mesuree,label="temperature mesurée")
+    plt.plot(indices,temperature_mesuree_lissee,label="temperature mesurée lissée")
+    plt.show()
+    plt.close()
+    plt.hist(difference_mesure_reele)
+    plt.hist(difference_lissee_reele)
+    plt.show()
+    print(RSME_mesure_relle)
+    print(RSME_lisse_reele)
+

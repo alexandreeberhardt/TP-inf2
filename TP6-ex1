@@ -1,28 +1,36 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy
+
 data = np.load('temperatures.npy')
 temperature_reelle = data[:, 0]
+#calcul de la temperature mesurée avec la formule du TP
 temperature_mesuree = data[:, 1]*10-10
 indices = np.arange(len(temperature_reelle))
 difference_mesure_reele = temperature_mesuree-temperature_reelle
+#calcul du RSME avec la formule du TP
 RSME_mesure_relle = np.sqrt(np.sum(difference_mesure_reele)/len(temperature_reelle))
+#Pour lisser la temperature mesurée, on utilise scipy
 temperature_mesuree_lissee=scipy.signal.medfilt(temperature_mesuree)
+#on recalcule la différence
 difference_lissee_reele = temperature_mesuree_lissee-temperature_reelle
+#et on recalcule le RSME
 RSME_lisse_reele = np.sqrt(np.sum(difference_lissee_reele)/len(temperature_reelle))
 
 if __name__ == '__main__':
-
+    #affiche sur la même courbe les temperatures réelles, mesurées et mesurées lissée
     plt.plot(indices,temperature_reelle,label="temperature réelle")
     plt.plot(indices,temperature_mesuree,label="temperature mesurée")
     plt.plot(indices,temperature_mesuree_lissee,label="temperature mesurée lissée")
     plt.legend()
     plt.show()
     plt.close()
+    #une fois qu'on a tout affiché, on ferme pour ouvrir un autre diagramme 
     plt.hist(difference_mesure_reele,label="différence mesure et réel")
     plt.hist(difference_lissee_reele,label="différence mesure lissée et réel")
     plt.legend()
     plt.show()
+    # et on affiche le RSME de la temperaturee mesurée et lissée, et on constate que la température lissée à un bien meilleur RSME
     print(f"le RSME de la temperature mesurée est : {RSME_mesure_relle}")
     print(f"le RSME de la mesure lissée est : {RSME_lisse_reele}")
 

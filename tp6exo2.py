@@ -8,144 +8,89 @@ print('classe :',type(Citroen_array)) #OU plt.imread('citroen.jpg')
 print( 'type :', Citroen_array.dtype)
 print( 'taille :', Citroen_array.shape)
 print( 'modifiable :', Citroen_array.flags.writeable)
-
 plt.imshow(Citroen_array)
+plt.title("Photo d'origine de la 2CV")
 plt.show()
 
 def rgb_to_hsv(rgb):
-    r, g, b = rgb[:,:,0], rgb[:,:, 1], rgb[:,:, 2]
+    r, g, b = rgb[:, :, 0], rgb[:, :, 1], rgb[:, :, 2]
     r1 = r/255
     g1 = g/255
     b1 = b/255
 
-    maxc = np.maximum(r1, g1, b1)
-    minc = np.minimum(r1, g1, b1)
+    maxc = np.max([r1, g1, b1],axis=0)
+    minc = np.min([r1, g1, b1],axis=0)
     deltac = maxc - minc
+
     choicelist = [0, ((g1-b1)/deltac % 6), ((b1-r1)/deltac+2), ((r1-g1)/deltac+4)]
     condlist = [deltac == 0, maxc == r1, maxc == g1, maxc == b1]
     h = 1/6*np.select(condlist, choicelist, 0)
-    choicelist = [0, deltac/maxc]
-    condlist = [maxc == 0, maxc != 0]
-    s = np.select(condlist, choicelist, 0)
-    v = maxc
-    print(h, s, v)
-    contour_plot = plt.contourf(h, s, v)
 
-    # Ajout de la barre de couleur associée au graphique de contour
-    colorbar = plt.colorbar(contour_plot)
+    choicelist1 = [0, deltac/maxc]
+    condlist1 = [maxc == 0, maxc != 0]
+    s = np.select(condlist1, choicelist1, 0)
+
+    v = maxc
+    hsv = np.random.rand(400,600,3)
+    hsv[:, :, 0] = h
+    hsv[:, :, 1] = s
+    hsv[:, :, 2] = v
+    return hsv
+
+
+def mask(hsv):
+    h, s, v = hsv[:, :, 0], hsv[:, :, 1], hsv[:, :, 2]
+    hsv_copy = np.copy(hsv)
+    '''hsv_copy = np.copy(hsv)
+    hsv_copy[hsv[:, :, 1] > 0.70] = 1.0
+    hsv_copy[hsv[:, :, 1] < 0.6] = 0.0
+    hsv_copy[hsv[:, :, 2] < 0.53] = 0.0
+    plt.imshow(hsv_copy[:,:,1])
+    plt.title("carrosserie de la 2CV isolée")
+    plt.show()
+    
+    nvelle = matplotlib.colors.hsv_to_rgb(hsv_copy)
+    plt.imshow(nvelle)
+    plt.colorbar()
+    plt.show()'''
+    hsv_copy[h > 0.52] = 1.0
+    hsv_copy[h < 0.22] = 0.0
+    hsv_copy[s > 0.75] = 1.0
+    hsv_copy[s < 0.30] = 0.0
+    hsv_copy[v < 0.51] = 0.0
+    plt.imshow(hsv_copy[:, :, 1])
+    plt.title("Carrosserie de la 2CV isolée")
     plt.show()
 
+    
+    nvelle = matplotlib.colors.hsv_to_rgb(hsv_copy)
+    plt.imshow(nvelle)
+    plt.colorbar()
+    plt.show()
 
 def main():
-    rgb_to_hsv(Citroen)
+    citroen_hsv = rgb_to_hsv(Citroen_array)
+    plt.imshow(citroen_hsv)
+    plt.title("HSV")
+    plt.show()
+    plt.imshow(citroen_hsv[:, :, 0])
+    plt.colorbar()
+    plt.title("Canal H")
+    plt.show()
+    plt.imshow(citroen_hsv[:, :, 1])
+    plt.colorbar()
+    plt.title("Canal S") #Seul qui fait ressortir la carrosserie, c'est donc lui que l'on doit modifier
+    plt.show()
+    plt.imshow(citroen_hsv[:, :, 2])
+    plt.colorbar()
+    plt.title("Canal V")
+    plt.show()
+
+    mask(citroen_hsv)
 
 if __name__ == '__main__':
     main()
 
 
 
-
-    '''deltac = maxc - minc
-    np.select(deltac == 0,)'''
-
-
-'''def rgb_to_hsv(rgb):
-    """
-    >>> from colorsys import rgb_to_hsv as rgb_to_hsv_single
-    >>> 'h={:.2f} s={:.2f} v={:.2f}'.format(*rgb_to_hsv_single(50, 120, 239))
-    'h=0.60 s=0.79 v=239.00'
-    >>> 'h={:.2f} s={:.2f} v={:.2f}'.format(*rgb_to_hsv_single(163, 200, 130))
-    'h=0.25 s=0.35 v=200.00'
-    >>> np.set_printoptions(2)
-    >>> rgb_to_hsv(np.array([[[50, 120, 239], [163, 200, 130]]]))
-    array([[[   0.6 ,    0.79,  239.  ],
-            [   0.25,    0.35,  200.  ]]])
-    >>> 'h={:.2f} s={:.2f} v={:.2f}'.format(*rgb_to_hsv_single(100, 100, 100))
-    'h=0.00 s=0.00 v=100.00'
-    >>> rgb_to_hsv(np.array([[50, 120, 239], [100, 100, 100]]))
-    array([[   0.6 ,    0.79,  239.  ],
-           [   0.  ,    0.  ,  100.  ]])
-    """
-    input_shape = rgb.shape
-    rgb = rgb.reshape(-1, 3)
-    r, g, b = rgb[:, 0], rgb[:, 1], rgb[:, 2]
-
-    maxc = np.maximum(np.maximum(r, g), b)
-    minc = np.minimum(np.minimum(r, g), b)
-    v = maxc
-
-    deltac = maxc - minc
-    s = deltac / maxc
-    deltac[deltac == 0] = 1  # to not divide by zero (those results in any way would be overridden in next lines)
-    rc = (maxc - r) / deltac
-    gc = (maxc - g) / deltac
-    bc = (maxc - b) / deltac
-
-    h = 4.0 + gc - rc
-    h[g == maxc] = 2.0 + rc[g == maxc] - bc[g == maxc]
-    h[r == maxc] = bc[r == maxc] - gc[r == maxc]
-    h[minc == maxc] = 0.0
-
-    h = (h / 6.0) % 1.0
-    res = np.dstack([h, s, v])
-    return res.reshape(input_shape)
-
-
-def hsv_to_rgb(hsv):
-    """
-    >>> from colorsys import hsv_to_rgb as hsv_to_rgb_single
-    >>> 'r={:.0f} g={:.0f} b={:.0f}'.format(*hsv_to_rgb_single(0.60, 0.79, 239))
-    'r=50 g=126 b=239'
-    >>> 'r={:.0f} g={:.0f} b={:.0f}'.format(*hsv_to_rgb_single(0.25, 0.35, 200.0))
-    'r=165 g=200 b=130'
-    >>> np.set_printoptions(0)
-    >>> hsv_to_rgb(np.array([[[0.60, 0.79, 239], [0.25, 0.35, 200.0]]]))
-    array([[[  50.,  126.,  239.],
-            [ 165.,  200.,  130.]]])
-    >>> 'r={:.0f} g={:.0f} b={:.0f}'.format(*hsv_to_rgb_single(0.60, 0.0, 239))
-    'r=239 g=239 b=239'
-    >>> hsv_to_rgb(np.array([[0.60, 0.79, 239], [0.60, 0.0, 239]]))
-    array([[  50.,  126.,  239.],
-           [ 239.,  239.,  239.]])
-    """
-    input_shape = hsv.shape
-    hsv = hsv.reshape(-1, 3)
-    h, s, v = hsv[:, 0], hsv[:, 1], hsv[:, 2]
-
-    i = np.int32(h * 6.0)
-    f = (h * 6.0) - i
-    p = v * (1.0 - s)
-    q = v * (1.0 - s * f)
-    t = v * (1.0 - s * (1.0 - f))
-    i = i % 6
-
-    rgb = np.zeros_like(hsv)
-    v, t, p, q = v.reshape(-1, 1), t.reshape(-1, 1), p.reshape(-1, 1), q.reshape(-1, 1)
-    rgb[i == 0] = np.hstack([v, t, p])[i == 0]
-    rgb[i == 1] = np.hstack([q, v, p])[i == 1]
-    rgb[i == 2] = np.hstack([p, v, t])[i == 2]
-    rgb[i == 3] = np.hstack([p, q, v])[i == 3]
-    rgb[i == 4] = np.hstack([t, p, v])[i == 4]
-    rgb[i == 5] = np.hstack([v, p, q])[i == 5]
-    rgb[s == 0.0] = np.hstack([v, v, v])[s == 0.0]
-
-    return rgb.reshape(input_shape)'''
-
-'''def rgb2hsv(rgb):
-    rgb = rgb.astype('float')
-    maxv = np.amax(rgb, axis=2)
-    maxc = np.argmax(rgb, axis=2)
-    minv = np.amin(rgb, axis=2)
-    minc = np.argmin(rgb, axis=2)
-
-    hsv = np.zeros(rgb.shape, dtype='float')
-    hsv[maxc == minc, 0] = np.zeros(hsv[maxc == minc, 0].shape)
-    hsv[maxc == 0, 0] = (((rgb[..., 1] - rgb[..., 2]) * 60.0 / (maxv - minv + np.spacing(1))) % 360.0)[maxc == 0]
-    hsv[maxc == 1, 0] = (((rgb[..., 2] - rgb[..., 0]) * 60.0 / (maxv - minv + np.spacing(1))) + 120.0)[maxc == 1]
-    hsv[maxc == 2, 0] = (((rgb[..., 0] - rgb[..., 1]) * 60.0 / (maxv - minv + np.spacing(1))) + 240.0)[maxc == 2]
-    hsv[maxv == 0, 1] = np.zeros(hsv[maxv == 0, 1].shape)
-    hsv[maxv != 0, 1] = (1 - minv / (maxv + np.spacing(1)))[maxv != 0]
-    hsv[..., 2] = maxv
-
-    return hsv'''
 

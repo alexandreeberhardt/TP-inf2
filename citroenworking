@@ -1,0 +1,51 @@
+from PIL import Image
+import numpy as np
+
+# Charger l'image
+image = Image.open('citroen.jpg')
+
+# Convertir l'image en mode HSV
+hsv_image = image.convert('HSV')
+
+# Séparer les canaux HSV
+h_channel, s_channel, v_channel = hsv_image.split()
+
+# Convertir les canaux en tableaux NumPy
+h_array = np.array(h_channel)
+s_array = np.array(s_channel)
+v_array = np.array(v_channel)
+
+# Seuils
+h_min, s_min, v_min = 135, 100, 100
+h_max, s_max, v_max = 145, 255, 255
+
+# Créer le masque en utilisant les seuils
+mask = np.logical_and.reduce((h_array >= h_min, h_array <= h_max,
+                              s_array >= s_min, s_array <= s_max,
+                              v_array >= v_min, v_array <= v_max))
+
+# Convertir le masque en tableau d'entiers
+mask = mask.astype(np.uint8) * 255
+
+# Appliquer le masque pour extraire uniquement les pixels correspondant à la carrosserie de la voiture
+masked_image = Image.fromarray(np.array(image) * np.expand_dims(mask, axis=2))
+
+# Modifier la couleur bleue en rouge dans l'image masquée
+pixels = masked_image.load()
+for i in range(masked_image.size[0]):
+    for j in range(masked_image.size[1]):
+        if mask[j, i] != 0:
+            pixels[i, j] = (255, 0, 0)
+
+# Afficher l'image résultante
+masked_image.show()
+
+# Convertir le masque en une instance de Image
+mask_image = Image.fromarray(mask)
+
+# Fusionner l'image filtrée avec l'image d'origine
+filtered_image = Image.fromarray(np.array(image))
+filtered_image.paste(masked_image, (0, 0), mask=mask_image)
+
+# Afficher l'image résultante
+filtered_image.show()

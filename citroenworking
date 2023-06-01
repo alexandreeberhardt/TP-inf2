@@ -1,8 +1,16 @@
 from PIL import Image
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 
 # Charger l'image
 image = Image.open('citroen.jpg')
+
+# Afficher l'image d'origine
+plt.subplot(2, 2, 1)
+plt.imshow(image)
+plt.title("Image d'origine")
+plt.axis('off')
 
 # Convertir l'image en mode HSV
 hsv_image = image.convert('HSV')
@@ -10,14 +18,51 @@ hsv_image = image.convert('HSV')
 # Séparer les canaux HSV
 h_channel, s_channel, v_channel = hsv_image.split()
 
+# Afficher les canaux séparément
+plt.subplot(2, 2, 2)
+plt.imshow(h_channel, cmap='hsv')
+plt.title("Canal H")
+plt.axis('off')
+
+plt.subplot(2, 2, 3)
+plt.imshow(s_channel, cmap='gray')
+plt.title("Canal S")
+plt.axis('off')
+
+plt.subplot(2, 2, 4)
+plt.imshow(v_channel, cmap='gray')
+plt.title("Canal V")
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
+
 # Convertir les canaux en tableaux NumPy
 h_array = np.array(h_channel)
 s_array = np.array(s_channel)
 v_array = np.array(v_channel)
 
+# Déterminer les seuils en utilisant matplotlib.pyplot.colorbar
+plt.subplot(1, 2, 1)
+plt.imshow(h_channel, cmap='hsv')
+plt.colorbar()
+plt.title("Histogramme du Canal H")
+plt.xlabel("Valeur du pixel")
+plt.ylabel("Fréquence")
+
+plt.subplot(1, 2, 2)
+plt.imshow(v_channel, cmap='gray')
+plt.colorbar()
+plt.title("Histogramme du Canal V")
+plt.xlabel("Valeur du pixel")
+plt.ylabel("Fréquence")
+
+plt.tight_layout()
+plt.show()
+
 # Seuils
-h_min, s_min, v_min = 135, 100, 100
-h_max, s_max, v_max = 145, 255, 255
+h_min, s_min, v_min = 130, 100, 50
+h_max, s_max, v_max = 150, 255, 255
 
 # Créer le masque en utilisant les seuils
 mask = np.logical_and.reduce((h_array >= h_min, h_array <= h_max,

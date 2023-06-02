@@ -1,7 +1,27 @@
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.colors as colors
+
+def rgb_to_hsv(r, g, b):
+    r, g, b = r / 255.0, g / 255.0, b / 255.0
+
+    mx = max(r, g, b)
+    mn = min(r, g, b)
+    df = mx-mn
+    if mx == mn:
+        h = 0
+    elif mx == r:
+        h = (60 * ((g-b)/df) + 360) % 360
+    elif mx == g:
+        h = (60 * ((b-r)/df) + 120) % 360
+    elif mx == b:
+        h = (60 * ((r-g)/df) + 240) % 360
+    if mx == 0:
+        s = 0
+    else:
+        s = (df/mx)*100
+    v = mx * 100
+    return h, s, v
 
 # Charger l'image
 image = Image.open('citroen.jpg')
@@ -13,10 +33,17 @@ plt.title("Image d'origine")
 plt.axis('off')
 
 # Convertir l'image en mode HSV
-hsv_image = image.convert('HSV')
+image_np = np.array(image)
+hsv_image_np = np.zeros_like(image_np)
+for i in range(image_np.shape[0]):
+    for j in range(image_np.shape[1]):
+        hsv_image_np[i, j, :] = rgb_to_hsv(image_np[i, j, 0], image_np[i, j, 1], image_np[i, j, 2])
+hsv_image_np = hsv_image_np.astype(int)
 
 # Séparer les canaux HSV
-h_channel, s_channel, v_channel = hsv_image.split()
+h_channel = hsv_image_np[:, :, 0]
+s_channel = hsv_image_np[:, :, 1]
+v_channel = hsv_image_np[:, :, 2]
 
 # Afficher les canaux séparément
 plt.subplot(2, 2, 2)
@@ -37,43 +64,21 @@ plt.axis('off')
 plt.tight_layout()
 plt.show()
 
-# Convertir les canaux en tableaux NumPy
-h_array = np.array(h_channel)
-s_array = np.array(s_channel)
-v_array = np.array(v_channel)
-
-# Déterminer les seuils en utilisant matplotlib.pyplot.colorbar
-plt.subplot(1, 2, 1)
-plt.imshow(h_channel, cmap='hsv')
-plt.colorbar()
-plt.title("Histogramme du Canal H")
-plt.xlabel("Valeur du pixel")
-plt.ylabel("Fréquence")
-
-plt.subplot(1, 2, 2)
-plt.imshow(v_channel, cmap='gray')
-plt.colorbar()
-plt.title("Histogramme du Canal V")
-plt.xlabel("Valeur du pixel")
-plt.ylabel("Fréquence")
-
-plt.tight_layout()
-plt.show()
-
-# Seuils
-h_min, s_min, v_min = 130, 100, 50
-h_max, s_max, v_max = 150, 255, 255
+# Déterminer les seuils
+h_min, s_min, v_min = 120, 35, 50
+h_max, s_max, v_max = 200, 255, 255
 
 # Créer le masque en utilisant les seuils
-mask = np.logical_and.reduce((h_array >= h_min, h_array <= h_max,
-                              s_array >= s_min, s_array <= s_max,
-                              v_array >= v_min, v_array <= v_max))
+mask = np.logical_and.reduce((h_channel >= h_min, h_channel <= h_max,
+                              s_channel >= s_min, s_channel <= s_max,
+                              v_channel >= v_min, v_channel <= v_max))
 
 # Convertir le masque en tableau d'entiers
 mask = mask.astype(np.uint8) * 255
 
 # Appliquer le masque pour extraire uniquement les pixels correspondant à la carrosserie de la voiture
-masked_image = Image.fromarray(np.array(image) * np.expand_dims(mask, axis=2))
+masked_image_np = np.array(image) * np.expand_dims(mask, axis=2)
+masked_image = Image.fromarray(masked_image_np)
 
 # Modifier la couleur bleue en rouge dans l'image masquée
 pixels = masked_image.load()

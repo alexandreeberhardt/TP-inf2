@@ -124,7 +124,7 @@ if __name__ == '__main__':
 
 '''Malheuresmeent, nous n'avons pas réussi à retrouver l'image d'origine avec les fonctions demandées par l'énoncé
  Le fond reste un petit peu rouge malgré la nette démarcation de la voiture en rouge
- Nous avons aussi essayé sans utiliser les fonctions données par l'énonce, voici le code (qui fonctionne) : 
+ Nous avons aussi essayé sans utiliser les fonctions données par l'énonce, voici le code (qui fonctionne et renvoie l'image avec le bon fond et la carrosserie de la voiture en rouge) : 
  
  
 from PIL import Image

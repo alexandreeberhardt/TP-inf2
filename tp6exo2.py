@@ -1,59 +1,60 @@
 import matplotlib.colors
 import numpy as np
 import matplotlib.pyplot as plt
-Citroen = plt.imread('citroen.jpg') # Ouverture de la photo
 
-Citroen_array = np.array(Citroen) # Création d'une array pour obtenir toutes les informations de la photo (pas forcément utile)
-print('classe :',type(Citroen_array)) #OU plt.imread('citroen.jpg')
-print( 'type :', Citroen_array.dtype)
-print( 'taille :', Citroen_array.shape)
-print( 'modifiable :', Citroen_array.flags.writeable)
+Citroen = plt.imread('citroen.jpg')  # Ouverture de la photo
+
+Citroen_array = np.array(Citroen)  # Création d'une array pour obtenir toutes les informations de la photo (pas forcément utile)
+print('classe :', type(Citroen_array))  # OU plt.imread('citroen.jpg')
+print('type :', Citroen_array.dtype)
+print('taille :', Citroen_array.shape)
+print('modifiable :', Citroen_array.flags.writeable)
 plt.imshow(Citroen_array)
 plt.title("Photo d'origine de la 2CV")
 plt.show()
 
-def rgb_to_hsv(rgb):
-    r, g, b = rgb[:, :, 0], rgb[:, :, 1], rgb[:, :, 2] # On sélectionne les canaux R (rouge), V (vert), B (bleu)
-    r1 = r/255
-    g1 = g/255
-    b1 = b/255
 
-    maxc = np.max([r1, g1, b1],axis=0)
-    minc = np.min([r1, g1, b1],axis=0)
+def rgb_to_hsv(rgb):
+    r, g, b = rgb[:, :, 0], rgb[:, :, 1], rgb[:, :, 2]  # On sélectionne les canaux R (rouge), V (vert), B (bleu)
+    r1 = r / 255
+    g1 = g / 255
+    b1 = b / 255
+
+    maxc = np.max([r1, g1, b1], axis=0)
+    minc = np.min([r1, g1, b1], axis=0)
     deltac = maxc - minc
 
-    choicelist = [0, ((g1-b1)/deltac % 6), ((b1-r1)/deltac+2), ((r1-g1)/deltac+4)]
+    choicelist = [0, ((g1 - b1) / deltac % 6), ((b1 - r1) / deltac + 2), ((r1 - g1) / deltac + 4)]
     condlist = [deltac == 0, maxc == r1, maxc == g1, maxc == b1]
-    h = 1/6*np.select(condlist, choicelist, 0) #utilisation du np.select comme indiqué dans l'énoncé avec les différentes conditions imposées dans le sujet
+    h = 1 / 6 * np.select(condlist, choicelist,0)  # utilisation du np.select comme indiqué dans l'énoncé avec les différentes conditions imposées dans le sujet
 
-    choicelist1 = [0, deltac/maxc]
+    choicelist1 = [0, deltac / maxc]
     condlist1 = [maxc == 0, maxc != 0]
     s = np.select(condlist1, choicelist1, 0)
 
     v = maxc
-    hsv = np.random.rand(400,600,3) #Création d'un ndarray avec les caractéristiques de la photo
-    hsv[:, :, 0] = h #conversion en hsv // ajout des caractéristiques hsv à la photo
-    hsv[:, :, 1] = s #conversion en hsv
-    hsv[:, :, 2] = v #conversion en hsv
+    hsv = np.random.rand(400, 600, 3)  # Création d'un ndarray avec les caractéristiques de la photo
+    hsv[:, :, 0] = h  # conversion en hsv // ajout des caractéristiques hsv à la photo
+    hsv[:, :, 1] = s  # conversion en hsv
+    hsv[:, :, 2] = v  # conversion en hsv
     return hsv
 
 
-def mask(hsv): # création du masque
+def mask(hsv):  # création du masque
     h, s, v = hsv[:, :, 0], hsv[:, :, 1], hsv[:, :, 2]
     hsv_copy = np.copy(hsv)
 
-    #Création des caractéristiques avec le masque pour obtenir la photo en hsv avec la carrosserie jaune et le fond mauve
-    h_mask = hsv_copy[h > 0.52] = 1.0 #On prend la couleur de la voiture depuis la colobar pour la changer en jaune (rouge en rgb)
+    # Création des caractéristiques avec le masque pour obtenir la photo en hsv avec la carrosserie jaune et le fond mauve
+    h_mask = hsv_copy[h > 0.52] = 1.0  # On prend la couleur de la voiture depuis la colobar pour la changer en jaune (rouge en rgb)
     h_mask2 = hsv_copy[h < 0.22] = 0.0
     s_mask = hsv_copy[s > 0.75] = 1.0
     s_mask2 = hsv_copy[s < 0.30] = 0.0
     v_mask = hsv_copy[v < 0.51] = 0.0
-    plt.colorbar()
     plt.imshow(hsv_copy[:, :, 1])
     plt.title("Carrosserie de la 2CV isolée")
     plt.show()
 
-    #Conversion des masques en tableau booléen pour pouvoir les manipuler ensuite pour retourner au rgb
+    # Conversion des masques en tableau booléen pour pouvoir les manipuler ensuite pour retourner au rgb
     h_mask = np.array(h_mask, dtype=bool)
     h_mask2 = np.array(h_mask2, dtype=bool)
     s_mask = np.array(s_mask, dtype=bool)
@@ -116,8 +117,8 @@ def main():
     plt.title("Canal V")
     plt.show()
 
+    mask(citroen_hsv)  # On applique le masque à la voiture
 
-    mask(citroen_hsv)# On applique le masque à la voiture
 
 if __name__ == '__main__':
     main()
@@ -125,8 +126,8 @@ if __name__ == '__main__':
 '''Malheuresmeent, nous n'avons pas réussi à retrouver l'image d'origine avec les fonctions demandées par l'énoncé
  Le fond reste un petit peu rouge malgré la nette démarcation de la voiture en rouge
  Nous avons aussi essayé sans utiliser les fonctions données par l'énonce, voici le code (qui fonctionne et renvoie l'image avec le bon fond et la carrosserie de la voiture en rouge) : 
- 
- 
+
+
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt

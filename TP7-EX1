@@ -1,0 +1,16 @@
+requete_etudiant = f'''CREATE TABLE IF NOT EXISTS `etudiant` (
+                  `id_etudiant` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                  `nom` TEXT  NULL,
+                  `prenom` TEXT  NULL,
+                  `semestre` TEXT  NULL,
+                  `numero_rue` TEXT  NULL,
+                  `label` INTEGER  NULL,
+                  `nom_rue` TEXT  NULL,
+                  `code_postal` TEXT  NULL,
+                  `ville` TEXT  NULL,
+                  `id_logement` INTEGER NULL,
+                  CONSTRAINT `fk_etudiant_logement`
+                    FOREIGN KEY (`id_logement`)  
+                    REFERENCES `etudiant` (`id_etudiant`)
+                    ON DELETE NO ACTION
+                    ON UPDATE NO ACTION)'''

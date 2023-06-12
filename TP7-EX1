@@ -1,16 +1,71 @@
-requete_etudiant = f'''CREATE TABLE IF NOT EXISTS `etudiant` (
-                  `id_etudiant` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                  `nom` TEXT  NULL,
-                  `prenom` TEXT  NULL,
-                  `semestre` TEXT  NULL,
-                  `numero_rue` TEXT  NULL,
-                  `label` INTEGER  NULL,
-                  `nom_rue` TEXT  NULL,
-                  `code_postal` TEXT  NULL,
-                  `ville` TEXT  NULL,
-                  `id_logement` INTEGER NULL,
-                  CONSTRAINT `fk_etudiant_logement`
-                    FOREIGN KEY (`id_logement`)  
-                    REFERENCES `etudiant` (`id_etudiant`)
-                    ON DELETE NO ACTION
-                    ON UPDATE NO ACTION)'''
+import sqlite3
+
+def main():
+    try:
+        # connexion a la BDD (création si elle n'existe pas)
+        connexion = sqlite3.connect("alesc.sqlite")
+        curseur = connexion.cursor()
+
+        # script de creation de la table logement
+        requete_logement = f'''CREATE TABLE IF NOT EXISTS `logement` (
+              `id_logement` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+              `numero_rue` TEXT  NULL,
+              `label` INTEGER  NULL,
+              `nom_rue` TEXT  NULL,
+              `code_postal` TEXT  NULL,
+              `ville` TEXT  NULL,
+              `type` TEXT  NULL,
+              `id_logeur` INTEGER NULL,
+              CONSTRAINT `fk_logement_logeur`
+                FOREIGN KEY (`id_logeur`)  
+                REFERENCES `logeur` (`id_logeur`)
+                ON DELETE NO ACTION
+                ON UPDATE NO ACTION)'''
+
+        curseur.execute(requete_logement)  # execution de la requete
+
+# CREATION DES AUTRES TABLES A FAIRE
+
+        requete_logeur = f'''CREATE TABLE IF NOT EXISTS `logeur` (
+              `id_logeur` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+              `nom` TEXT  NULL,
+              `prenom` TEXT  NULL,
+              `numero_rue` INTEGER  NULL,
+              `nom_rue` TEXT  NULL,
+              `code_postal` INTEGER NULL,
+              `ville` TEXT  NULL,
+                ON DELETE NO ACTION
+                ON UPDATE NO ACTION)'''
+
+        requete_etudiant = f'''CREATE TABLE IF NOT EXISTS `etudiant` (
+              `id_etudiant` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+              `nom` TEXT  NULL,
+              `prenom` TEXT  NULL,
+              `semestre` TEXT  NULL,
+              `numero_rue` TEXT  NULL,
+              `label` INTEGER  NULL,
+              `nom_rue` TEXT  NULL,
+              `code_postal` TEXT  NULL,
+              `ville` TEXT  NULL,
+              `id_logement` INTEGER NULL,
+              CONSTRAINT `fk_etudiant_logement`
+                FOREIGN KEY (`id_logement`)  
+                REFERENCES `etudiant` (`id_etudiant`)
+                ON DELETE NO ACTION
+                ON UPDATE NO ACTION)'''
+
+        connexion.commit()
+
+    except FileNotFoundError:
+        print("fichier inexistant")
+    finally:
+        if connexion:
+            curseur.close()
+            connexion.close()
+
+
+
+if __name__ == '__main__':
+    main()
+
+

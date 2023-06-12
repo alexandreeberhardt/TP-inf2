@@ -33,9 +33,9 @@ def main():
               `numero_rue` INTEGER  NULL,
               `nom_rue` TEXT  NULL,
               `code_postal` INTEGER NULL,
-              `ville` TEXT  NULL,
-                ON DELETE NO ACTION
-                ON UPDATE NO ACTION)'''
+              `ville` TEXT  NULL)'''
+
+        curseur.execute(requete_logeur)  # execution de la requete
 
         requete_etudiant = f'''CREATE TABLE IF NOT EXISTS `etudiant` (
               `id_etudiant` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -53,6 +53,7 @@ def main():
                 REFERENCES `etudiant` (`id_etudiant`)
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION)'''
+        curseur.execute(requete_etudiant)  # execution de la requete
 
         connexion.commit()
 

@@ -1,4 +1,5 @@
 import sqlite3
+import pandas as pd
 
 def main():
     try:
@@ -23,8 +24,35 @@ def main():
                 ON UPDATE NO ACTION)'''
 
         curseur.execute(requete_logement)  # execution de la requete
+        requete_insert_logement = '''INSERT INTO logement (numero_rue, label, nom_rue, code_postal, ville, type, id_logeur)
+                                    VALUES (:numero_rue, :label, :nom_rue, :code_postal, :ville, :type_logement, 1)'''
 
-# CREATION DES AUTRES TABLES A FAIRE
+        data = pd.read_excel("logements.xlsx")
+
+        for index, row in data.iterrows():
+            numero_rue = row['numero_rue']
+            nom_rue = row['nom_rue']
+            code_postal = row['code_postal']
+            ville = row['ville']
+            label = row['label']
+            nom_logeur = row['nom_logeur']
+            prenom_logeur = row['prenom_logeur']
+            type_logement = row['type_logement']
+            valeurs = {
+                'numero_rue': numero_rue,
+                'nom_rue': nom_rue,
+                'code_postal': code_postal,
+                'ville': ville,
+                'label' : label,
+                'nom_logeur':nom_logeur,
+                'prenom_logeur':prenom_logeur,
+                'type_logement': type_logement,
+                #'id_logeur': id_logeur
+            }
+
+            curseur.execute(requete_insert_logement,valeurs)
+
+        # CREATION DES AUTRES TABLES A FAIRE
 
         requete_logeur = f'''CREATE TABLE IF NOT EXISTS `logeur` (
               `id_logeur` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,

@@ -7,6 +7,41 @@ def main():
         connexion = sqlite3.connect("alesc.sqlite")
         curseur = connexion.cursor()
 
+        # Script de création de la table logeur
+        requete_logeur = f'''CREATE TABLE IF NOT EXISTS `logeur` (
+                                     `id_logeur` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                                     `nom` TEXT NULL,
+                                     `prenom` TEXT NULL,
+                                     `numero_rue` INTEGER NULL,
+                                     `nom_rue` TEXT NULL,
+                                     `code_postal` INTEGER NULL,
+                                     `ville` TEXT NULL)'''
+
+        curseur.execute(requete_logeur)  # Exécution de la requête
+
+        requete_insert_logeur = '''INSERT INTO logeur (nom, prenom, numero_rue, nom_rue, code_postal, ville)
+                                          VALUES (:nom, :prenom, :numero_rue, :nom_rue, :code_postal, :ville)'''
+
+        data_logeur = pd.read_excel("logeurs.xlsx")
+
+        for index, row in data_logeur.iterrows():
+            nom = row['nom']
+            prenom = row['prenom']
+            numero_rue = row['numero_rue']
+            nom_rue = row['nom_rue']
+            code_postal = row['code_postal']
+            ville = row['ville']
+            valeurs_logeur = {
+                'nom': nom,
+                'prenom': prenom,
+                'numero_rue': numero_rue,
+                'nom_rue': nom_rue,
+                'code_postal': code_postal,
+                'ville': ville
+            }
+
+            curseur.execute(requete_insert_logeur, valeurs_logeur)
+
         # script de creation de la table logement
         requete_logement = f'''CREATE TABLE IF NOT EXISTS `logement` (
               `id_logement` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -54,34 +89,43 @@ def main():
 
         # CREATION DES AUTRES TABLES A FAIRE
 
-        requete_logeur = f'''CREATE TABLE IF NOT EXISTS `logeur` (
-              `id_logeur` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-              `nom` TEXT  NULL,
-              `prenom` TEXT  NULL,
-              `numero_rue` INTEGER  NULL,
-              `nom_rue` TEXT  NULL,
-              `code_postal` INTEGER NULL,
-              `ville` TEXT  NULL)'''
-
-        curseur.execute(requete_logeur)  # execution de la requete
-
+        # Script de création de la table etudiant
         requete_etudiant = f'''CREATE TABLE IF NOT EXISTS `etudiant` (
-              `id_etudiant` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-              `nom` TEXT  NULL,
-              `prenom` TEXT  NULL,
-              `semestre` TEXT  NULL,
-              `numero_rue` TEXT  NULL,
-              `label` INTEGER  NULL,
-              `nom_rue` TEXT  NULL,
-              `code_postal` TEXT  NULL,
-              `ville` TEXT  NULL,
-              `id_logement` INTEGER NULL,
-              CONSTRAINT `fk_etudiant_logement`
-                FOREIGN KEY (`id_logement`)  
-                REFERENCES `etudiant` (`id_etudiant`)
-                ON DELETE NO ACTION
-                ON UPDATE NO ACTION)'''
-        curseur.execute(requete_etudiant)  # execution de la requete
+                             `id_etudiant` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                             `nom` TEXT NULL,
+                             `prenom` TEXT NULL,
+                             `semestre` INTEGER NULL,
+                             `numero_rue` INTEGER NULL,
+                             `nom_rue` TEXT NULL,
+                             `code_postal` INTEGER NULL,
+                             `ville` TEXT NULL)'''
+
+        curseur.execute(requete_etudiant)  # Exécution de la requête
+
+        requete_insert_etudiant = '''INSERT INTO etudiant (nom, prenom, semestre, numero_rue, nom_rue, code_postal, ville)
+                                   VALUES (:nom, :prenom, :semestre, :numero_rue, :nom_rue, :code_postal, :ville)'''
+
+        data_etudiant = pd.read_excel("etudiants.xlsx")
+
+        for index, row in data_etudiant.iterrows():
+            nom = row['nom']
+            prenom = row['prenom']
+            semestre = row['semestre']
+            numero_rue = row['numero_rue']
+            nom_rue = row['nom_rue']
+            code_postal = row['code_postal']
+            ville = row['ville']
+            valeurs_etudiant = {
+                'nom': nom,
+                'prenom': prenom,
+                'semestre': semestre,
+                'numero_rue': numero_rue,
+                'nom_rue': nom_rue,
+                'code_postal': code_postal,
+                'ville': ville
+            }
+
+            curseur.execute(requete_insert_etudiant, valeurs_etudiant)
 
         connexion.commit()
 

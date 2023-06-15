@@ -58,9 +58,14 @@ def main():
                 ON DELETE NO ACTION
                 ON UPDATE NO ACTION)'''
 
+
         curseur.execute(requete_logement)  # execution de la requete
         requete_insert_logement = '''INSERT INTO logement (numero_rue, label, nom_rue, code_postal, ville, type, id_logeur)
-                                    VALUES (:numero_rue, :label, :nom_rue, :code_postal, :ville, :type_logement, 1)'''
+                                    VALUES (:numero_rue, :label, :nom_rue, :code_postal, :ville, :type_logement, :id_logeur)'''
+
+        data = pd.read_excel("logements.xlsx")
+
+        # ...
 
         data = pd.read_excel("logements.xlsx")
 
@@ -73,19 +78,27 @@ def main():
             nom_logeur = row['nom_logeur']
             prenom_logeur = row['prenom_logeur']
             type_logement = row['type_logement']
-            valeurs = {
-                'numero_rue': numero_rue,
-                'nom_rue': nom_rue,
-                'code_postal': code_postal,
-                'ville': ville,
-                'label' : label,
-                'nom_logeur':nom_logeur,
-                'prenom_logeur':prenom_logeur,
-                'type_logement': type_logement,
-                #'id_logeur': id_logeur
-            }
 
-            curseur.execute(requete_insert_logement,valeurs)
+            nom_prenom = {'nom_logeur': nom_logeur, 'prenom_logeur': prenom_logeur}
+            select_id_logeur = '''SELECT id_logeur FROM logeur WHERE logeur.prenom=:prenom_logeur AND logeur.nom=:nom_logeur'''
+            curseur.execute(select_id_logeur, nom_prenom)
+            row = curseur.fetchone()  # Récupérer la ligne résultante
+            if row:
+                id_logeur = row[0]  # Extraire la valeur de l'ID à partir de la ligne
+
+                valeurs = {
+                    'numero_rue': numero_rue,
+                    'nom_rue': nom_rue,
+                    'code_postal': code_postal,
+                    'ville': ville,
+                    'label': label,
+                    'nom_logeur': nom_logeur,
+                    'prenom_logeur': prenom_logeur,
+                    'type_logement': type_logement,
+                    'id_logeur': id_logeur
+                }
+
+                curseur.execute(requete_insert_logement, valeurs)
 
         # CREATION DES AUTRES TABLES A FAIRE
 
@@ -95,15 +108,17 @@ def main():
                              `nom` TEXT NULL,
                              `prenom` TEXT NULL,
                              `semestre` INTEGER NULL,
-                             `numero_rue` INTEGER NULL,
-                             `nom_rue` TEXT NULL,
-                             `code_postal` INTEGER NULL,
-                             `ville` TEXT NULL)'''
+                             `id_logement` INTEGER NULL,
+                                  CONSTRAINT `fk_etudiant_logement`
+                                    FOREIGN KEY (`id_logement`)  
+                                    REFERENCES `logement` (`id_logement`)
+                                    ON DELETE NO ACTION
+                                    ON UPDATE NO ACTION)'''
 
         curseur.execute(requete_etudiant)  # Exécution de la requête
 
-        requete_insert_etudiant = '''INSERT INTO etudiant (nom, prenom, semestre, numero_rue, nom_rue, code_postal, ville)
-                                   VALUES (:nom, :prenom, :semestre, :numero_rue, :nom_rue, :code_postal, :ville)'''
+        requete_insert_etudiant = '''INSERT INTO etudiant (nom, prenom, semestre,id_logement)
+                                   VALUES (:nom, :prenom, :semestre, :id_logement)'''
 
         data_etudiant = pd.read_excel("etudiants.xlsx")
 
@@ -115,14 +130,18 @@ def main():
             nom_rue = row['nom_rue']
             code_postal = row['code_postal']
             ville = row['ville']
+            adresse = {'numero_rue': numero_rue, 'nom_rue': nom_rue,'code_postal':code_postal,'ville':ville}
+            select_id_logement = '''SELECT id_logement FROM logement WHERE logement.nom_rue=:nom_rue AND logement.numero_rue=:numero_rue AND logement.code_postal=:code_postal AND logement.ville=:ville'''
+            curseur.execute(select_id_logement, adresse)
+            row = curseur.fetchone()  # Récupérer la ligne résultante
+            id_logement = row[0]
             valeurs_etudiant = {
                 'nom': nom,
                 'prenom': prenom,
                 'semestre': semestre,
-                'numero_rue': numero_rue,
-                'nom_rue': nom_rue,
                 'code_postal': code_postal,
-                'ville': ville
+                'ville': ville,
+                'id_logement':id_logement
             }
 
             curseur.execute(requete_insert_etudiant, valeurs_etudiant)

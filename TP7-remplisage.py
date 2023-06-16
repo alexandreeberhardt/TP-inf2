@@ -42,7 +42,7 @@ def creation_bdd(connexion, curseur):
 
     # On lit les donnees du fichier excel
 
-    data = pd.read_excel("/Users/hugo/PycharmProjects/pythonProject/logements.xlsx")
+    data = pd.read_excel("logements.xlsx")
     for i in range(len(data)):
             # creation d'une liste de clef etrangere id_type"
             nom_logement = (data.type_logement[i],)
@@ -64,6 +64,11 @@ def creation_bdd(connexion, curseur):
             int(data.numero_rue[i]), data.nom_rue[i], int(data.code_postal[i]), data.ville[i], int(data.label[i]),
             id_type, id_logeur)
             curseur.execute(
+                f'SELECT * FROM logement WHERE numero_rue = ? AND nom_rue = ? AND code_postal=? AND  ville=? AND label =? AND type=? AND id_logeur=?',
+                (compo))
+
+            if curseur.fetchone() is None:
+                curseur.execute(
                 f'INSERT INTO logement (numero_rue,nom_rue,code_postal,ville,label,type,id_logeur) VALUES (?,?,?,?,?,?,?)',
                 compo)
             connexion.commit()

@@ -14,88 +14,59 @@ def creation_bdd(connexion, curseur):
     # POur chaque logeur, on associe a une variable ses donnees
 
     for i in range(len(datalogeurs)):
-        nom = datalogeurs.nom[i]
-        prenom = datalogeurs.prenom[i]
-        numero_rue = int(datalogeurs.numero_rue[i])
-        nom_rue = datalogeurs.nom_rue[i]
-        code_postal = int(datalogeurs.code_postal[i])
-        ville = datalogeurs.ville[i]
+        compo = (datalogeurs.nom[i],datalogeurs.prenom[i],int(datalogeurs.numero_rue[i]),datalogeurs.nom_rue[i],int(datalogeurs.code_postal[i]),datalogeurs.ville[i])
 
         # On verifie si il existe deja une adresse identique dans la table adresse
 
         curseur.execute(
-            f'SELECT 1 FROM logeur WHERE nom = ? AND prenom = ? AND numero_rue=? AND  nom_rue=? AND code_postal =? AND ville=?',
-            (nom,prenom, numero_rue, nom_rue, code_postal, ville))
+            f'SELECT * FROM logeur WHERE nom = ? AND prenom = ? AND numero_rue=? AND  nom_rue=? AND code_postal =? AND ville=?',
+            (compo))
 
-        # si il n'y en a pas, on l'insere dans la table Adresses avec comme valeurs les donnees du fichier excel
+        # si il n'y en a pas, on l'insere dans la table logeur avec comme valeurs les donnees du fichier excel
 
         if curseur.fetchone() is None:
             curseur.execute(f'INSERT INTO logeur (nom, prenom, numero_rue, nom_rue, code_postal, ville) VALUES (?,?,?,?,?,?)',
-                            (nom, prenom, numero_rue, nom_rue, code_postal, ville))
+                            (compo))
 
     # On insere ensuite tous les typs de logement possibles dans la table type de logement
 
-    for i in ['f1', 'f2', 'f3', 'f4', 'f5', 'maison', 'studio']:
+    types_logement = ['f1', 'f2', 'f3', 'f4', 'f5', 'maison', 'studio']
 
-        # On creer une verification pour ne pas creer de doublons lorsque re execute le programme pour rajouter des logeurs etc...
+    for type_logement in types_logement:
+        curseur.execute(f'SELECT id_type_logement FROM type_logement WHERE type=?', (type_logement,))
+        result = curseur.fetchone()
 
-        curseur.execute(f'SELECT id_type_logement FROM type_logement WHERE type=?', (i,))
-        if curseur.fetchone() is None:
-            curseur.execute(f'INSERT INTO type_logement (Type) VALUES (?)', (i,))
+        if result is None:
+            curseur.execute(f'INSERT INTO type_logement (Type) VALUES (?)', (type_logement,))
             connexion.commit()
 
     # On lit les donnees du fichier excel
 
-    datalogements = pd.read_excel("logements.xlsx")
+    data = pd.read_excel("/Users/hugo/PycharmProjects/pythonProject/logements.xlsx")
+    for i in range(len(data)):
+            # creation d'une liste de clef etrangere id_type"
+            nom_logement = (data.type_logement[i],)
+            curseur.execute(f'SELECT type FROM type_logement WHERE (?) = type_logement.type', nom_logement)
+            result = curseur.fetchone()
 
-    # pour chaque logement on associe des variable
+            if result is not None:
+                id_type = result[0]
 
-    for i in range(len(datalogements)):
-        numero_rue = int(datalogements.numero_rue[i])
-        nom_rue = datalogements.nom_rue[i]
-        code_postal = int(datalogements.code_postal[i])
-        ville = datalogements.ville[i]
+                prenom_nom = (data.prenom_logeur[i], data.nom_logeur[i])
+                curseur.execute('SELECT id_logeur FROM logeur WHERE prenom = ? AND nom = ?', prenom_nom)
+                result = curseur.fetchone()
 
+                if result is not None:
+                    id_logeur = result[0]
 
-        # On verifie que l'adresse n'existe pas deja
-
-        curseur.execute(
-            f'SELECT 1 FROM logement WHERE numero_rue=? AND  nom_rue=? AND code_postal =? AND ville=?',
-            (numero_rue, nom_rue, code_postal, ville))
-        id_adr = curseur.fetchone()
-        if id_adr is None:
-            # Si elle n'existe pas on l'insere dans la table et on recupere son id
-
-            curseur.execute(f'INSERT INTO logement (numero_rue, nom_rue, code_postal, ville) VALUES (?,?,?,?)',
-                            (numero_rue, nom_rue, code_postal, ville))
-
-
-        # Si il n'y en a pas on recupere le reste des donnees du logement
-
-        if curseur.fetchone() is None:
-            label = int(datalogements.label[i])
-            nom_logeur = datalogements.nom_logeur[i]
-            prenom_logeur = datalogements.prenom_logeur[i]
-
-            # On selectionne l'id du logeur de l'appartement pour le rentrer dans la table logement egalemet
-
-            curseur.execute(f'SELECT id_logeur FROM logeur WHERE nom=? AND prenom=?',
-                            (nom_logeur, prenom_logeur))
-            id = curseur.fetchone()[0]
-            type_logement1 = datalogements.type_logement[i]
-
-            # Meme chose avec l'id du type de logement
-
-            curseur.execute(f'SELECT id_type_logement FROM type_logement WHERE type=?', (type_logement1,))
-            type = curseur.fetchall()[0][0]
-
-            # Puis on insere toutes les donnees dans la table logement
-
+            # remplissage de la table"
+            compo = (
+            int(data.numero_rue[i]), data.nom_rue[i], int(data.code_postal[i]), data.ville[i], int(data.label[i]),
+            id_type, id_logeur)
             curseur.execute(
-                f'INSERT INTO Logement (label,id_logeur,id_type_logement) VALUES (?,?,?)',
-                (label, id, type))
+                f'INSERT INTO logement (numero_rue,nom_rue,code_postal,ville,label,type,id_logeur) VALUES (?,?,?,?,?,?,?)',
+                compo)
             connexion.commit()
-
     # Meme principe avec les etudiants
 
     dataetudiants = pd.read_excel("etudiants.xlsx")
@@ -120,7 +91,12 @@ def creation_bdd(connexion, curseur):
             curseur.execute(
                 f'SELECT id_logement FROM logement WHERE numero_rue=? AND nom_rue=? AND ville=? AND code_postal=?',
                 (numero_rue, nom_rue, ville, code_postal))
-            id_adr = int(curseur.fetchall()[0][0])
+            result = curseur.fetchall()
+            if result:
+                id_adr = int(result[0][0])
+            else:
+                # Faire quelque chose si aucun résultat n'est trouvé
+                id_adr = None  # Par exemple, définir id_adr à None ou une autre valeur appropriée
 
             # Puis on les insere dans la table etudiant
 

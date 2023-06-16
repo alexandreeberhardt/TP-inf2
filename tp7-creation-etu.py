@@ -31,16 +31,15 @@ def main():
         # Script de création de la table logement
         requete_logement = '''CREATE TABLE IF NOT EXISTS logement (
                                 id_logement INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                                id_type_logement INTEGER REFERENCES type_logement(id_type_logement),
+                                type INTEGER REFERENCES type_logement(type),
                                 numero_rue TEXT NULL,
                                 label INTEGER NULL,
                                 nom_rue TEXT NULL,
                                 code_postal TEXT NULL,
                                 ville TEXT NULL,
-                                type TEXT NULL,
                                 id_logeur INTEGER NULL,
                                 CONSTRAINT fk_logement_type_logement
-                                    FOREIGN KEY (id_type_logement) REFERENCES type_logement(id_type_logement)
+                                    FOREIGN KEY (type) REFERENCES type_logement(type)
                                     ON DELETE NO ACTION
                                     ON UPDATE NO ACTION,
                                 CONSTRAINT fk_logement_logeur

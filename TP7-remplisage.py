@@ -24,30 +24,14 @@ def creation_bdd(connexion, curseur):
         # On verifie si il existe deja une adresse identique dans la table adresse
 
         curseur.execute(
-            f'SELECT id_adresse FROM Adresses WHERE numero_rue=? AND  nom_rue=? AND code_postal =? AND ville=?',
-            (numero_rue, nom_rue, code_postal, ville))
+            f'SELECT 1 FROM logeur WHERE nom = ? AND prenom = ? AND numero_rue=? AND  nom_rue=? AND code_postal =? AND ville=?',
+            (nom,prenom, numero_rue, nom_rue, code_postal, ville))
 
         # si il n'y en a pas, on l'insere dans la table Adresses avec comme valeurs les donnees du fichier excel
 
         if curseur.fetchone() is None:
-            curseur.execute(f'INSERT INTO Adresses (numero_rue, nom_rue, code_postal, ville) VALUES (?,?,?,?)',
-                            (numero_rue, nom_rue, code_postal, ville))
-
-        # Et on recupere son id pour le mettre dans la table logeur
-
-        curseur.execute(
-            f'SELECT id_adresse FROM Adresses WHERE numero_rue=? AND  nom_rue=? AND code_postal =? AND ville=?',
-            (numero_rue, nom_rue, code_postal, ville))
-        id_adresse = curseur.fetchone()[0]
-
-        # On verifie ensuite si il existe deja un logeur ayant meme prenom et nom
-
-        curseur.execute(f'SELECT id_logeur FROM logeur WHERE nom=? AND prenom=?', (nom, prenom))
-
-        # si il n'y en a pas, on l'insere dans la table logeur
-
-        if curseur.fetchone() is None:
-            curseur.execute(f'INSERT INTO logeur (nom,prenom, id_adresse) VALUES (?,?,?)', (nom, prenom, id_adresse))
+            curseur.execute(f'INSERT INTO logeur (nom, prenom, numero_rue, nom_rue, code_postal, ville) VALUES (?,?,?,?,?,?)',
+                            (nom, prenom, numero_rue, nom_rue, code_postal, ville))
 
     # On insere ensuite tous les typs de logement possibles dans la table type de logement
 
@@ -72,25 +56,19 @@ def creation_bdd(connexion, curseur):
         code_postal = int(datalogements.code_postal[i])
         ville = datalogements.ville[i]
 
+
         # On verifie que l'adresse n'existe pas deja
 
         curseur.execute(
-            f'SELECT id_adresse FROM Adresses WHERE numero_rue=? AND  nom_rue=? AND code_postal =? AND ville=?',
+            f'SELECT 1 FROM logement WHERE numero_rue=? AND  nom_rue=? AND code_postal =? AND ville=?',
             (numero_rue, nom_rue, code_postal, ville))
         id_adr = curseur.fetchone()
         if id_adr is None:
             # Si elle n'existe pas on l'insere dans la table et on recupere son id
 
-            curseur.execute(f'INSERT INTO Adresses (numero_rue, nom_rue, code_postal, ville) VALUES (?,?,?,?)',
+            curseur.execute(f'INSERT INTO logement (numero_rue, nom_rue, code_postal, ville) VALUES (?,?,?,?)',
                             (numero_rue, nom_rue, code_postal, ville))
-            curseur.execute(
-                f'SELECT id_adresse FROM Adresses WHERE numero_rue=? AND  nom_rue=? AND code_postal =? AND ville=?',
-                (numero_rue, nom_rue, code_postal, ville))
-            id_adr = curseur.fetchone()
 
-        # On verifie si il existe deja un logement a la meme adresse
-
-        curseur.execute(f'SELECT id_logement FROM Logement WHERE id_adresse=?', (id_adr[0],))
 
         # Si il n'y en a pas on recupere le reste des donnees du logement
 
@@ -114,8 +92,8 @@ def creation_bdd(connexion, curseur):
             # Puis on insere toutes les donnees dans la table logement
 
             curseur.execute(
-                f'INSERT INTO Logement (id_adresse,label,id_logeur,id_type_logement) VALUES (?,?,?,?)',
-                (id_adr[0], label, id, type))
+                f'INSERT INTO Logement (label,id_logeur,id_type_logement) VALUES (?,?,?)',
+                (label, id, type))
             connexion.commit()
 
     # Meme principe avec les etudiants
@@ -140,16 +118,14 @@ def creation_bdd(connexion, curseur):
 
         if curseur.fetchone() is None:
             curseur.execute(
-                f'SELECT id_adresse FROM Adresses WHERE numero_rue=? AND nom_rue=? AND ville=? AND code_postal=?',
+                f'SELECT id_logement FROM logement WHERE numero_rue=? AND nom_rue=? AND ville=? AND code_postal=?',
                 (numero_rue, nom_rue, ville, code_postal))
             id_adr = int(curseur.fetchall()[0][0])
-            curseur.execute(f'SELECT id_logement FROM Logement WHERE id_adresse=?', (id_adr,))
-            id = curseur.fetchall()[0][0]
 
-            # Puis on les insere dans la table etudiants
+            # Puis on les insere dans la table etudiant
 
             curseur.execute(f'INSERT INTO etudiant (nom,prenom,semestre,id_logement) VALUES (?,?,?,?)',
-                            (nom, prenom, semestre, id))
+                            (nom, prenom, semestre, id_adr))
             connexion.commit()
 def main():
     connexion = sqlite3.connect("alesc.sqlite")

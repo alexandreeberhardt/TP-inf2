@@ -15,38 +15,22 @@ def main():
 
         curseur.execute(requete_type_logement)
 
-        requete_adresses = '''CREATE TABLE IF NOT EXISTS Adresses
-                             (
-                                 id_adresse INTEGER PRIMARY KEY,
-                                 numero_rue INTEGER,
-                                 nom_rue VARCHAR(100),
-                                 code_postal VARCHAR(100),
-                                 ville VARCHAR(100)
-                             );'''
-        curseur.execute(requete_adresses)
-
         # Script de création de la table logeur
         requete_logeur = '''CREATE TABLE IF NOT EXISTS logeur (
                                 id_logeur INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                                id_adresse INTEGER REFERENCES Adresses(id_adresse),
                                 nom TEXT NULL,
                                 prenom TEXT NULL,
                                 numero_rue INTEGER NULL,
                                 nom_rue TEXT NULL,
                                 code_postal INTEGER NULL,
-                                ville TEXT NULL,
-                                CONSTRAINT fk_logeur_adresse
-                                    FOREIGN KEY (id_adresse) REFERENCES Adresses(id_adresse)
-                                    ON DELETE NO ACTION
-                                    ON UPDATE NO ACTION
-                            );'''
+                                ville TEXT NULL
+                               );'''
 
         curseur.execute(requete_logeur)  # Exécution de la requête
 
         # Script de création de la table logement
         requete_logement = '''CREATE TABLE IF NOT EXISTS logement (
                                 id_logement INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                                id_adresse INTEGER REFERENCES Adresses(id_adresse),
                                 id_type_logement INTEGER REFERENCES type_logement(id_type_logement),
                                 numero_rue TEXT NULL,
                                 label INTEGER NULL,
@@ -55,10 +39,6 @@ def main():
                                 ville TEXT NULL,
                                 type TEXT NULL,
                                 id_logeur INTEGER NULL,
-                                CONSTRAINT fk_logement_adresse
-                                    FOREIGN KEY (id_adresse) REFERENCES Adresses(id_adresse)
-                                    ON DELETE NO ACTION
-                                    ON UPDATE NO ACTION,
                                 CONSTRAINT fk_logement_type_logement
                                     FOREIGN KEY (id_type_logement) REFERENCES type_logement(id_type_logement)
                                     ON DELETE NO ACTION

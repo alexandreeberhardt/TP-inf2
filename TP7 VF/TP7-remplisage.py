@@ -96,8 +96,7 @@ def creation_bdd(connexion, curseur):
             if result:
                 id_adr = int(result[0][0])
             else:
-                # Faire quelque chose si aucun résultat n'est trouvé
-                id_adr = None  # Par exemple, définir id_adr à None ou une autre valeur appropriée
+                id_adr = None  # Si aucun résultat n'est trouvé, définir id_adr à None puisqu'il n'y a aucune donnée trouvée.
 
             # Puis on les insere dans la table etudiant
 

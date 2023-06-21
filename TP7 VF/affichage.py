@@ -1,10 +1,8 @@
 import sqlite3
 
 def get_logements(connexion, curseur):
-    nom1 = input("Entrez le nom du logeur: ")
-    nom = nom1.lower()
-    prenom1 = input("Entrez le prénom du logeur: ")
-    prenom = prenom1.lower()
+    nom = input("Entrez le nom du logeur: ")
+    prenom = input("Entrez le prénom du logeur: ")
 
     # on recherche l'id_logeur en considerant qu'il n'y a pas d'homonymes
     curseur.execute('SELECT id_logeur FROM logeur WHERE nom = ? AND prenom = ?', (nom, prenom))
@@ -42,7 +40,7 @@ def get_logements(connexion, curseur):
             print("Le logeur existe mais n'a pas de logements")
     else:
         print(f"le logeur nommé {prenom} {nom} n'est pas dans la table")
-        #on peut imaginer une fonction qui demanderait a l'utilisateur si iel veut ajouter le logeur dans la base de donnée
+        #on peut imaginer une fonction qui demanderai a l'utilisateur si iel veut ajouter le logeur dans la base de donnée
         #il faudrait demander les informations et l'ajouter avec la methode du fichier "remplissage.py"
     curseur.close()
 
@@ -53,3 +51,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+

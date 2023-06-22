@@ -106,10 +106,8 @@ def creation_bdd(connexion, curseur):
 def main():
     connexion = sqlite3.connect("alesc.sqlite")
     curseur = connexion.cursor()
-    #delete_all(connexion, curseur)
     creation_bdd(connexion, curseur)
-    #fenetre = Interface()
-    #fenetre.mainloop()
+ 
 
 if __name__ == '__main__':
     main()

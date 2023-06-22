@@ -46,7 +46,7 @@ def creation_bdd(connexion, curseur):
     for i in range(len(data)):
             #création d'une variable qui stocke le type de logement
             nom_logement = (data.type_logement[i],)
-            # On sélectionne la donnée du type_logement
+            # On sélectionne la donnée du type_logement, ce à quoi sert la table type_logement.
             curseur.execute(f'SELECT type FROM type_logement WHERE (?) = type_logement.type', nom_logement)
             result = curseur.fetchone()
             # S'il y en a pas déjà, on sélectionne les autres données pour remplir la table

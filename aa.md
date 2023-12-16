@@ -1,5 +1,7 @@
 ##Exercice 2
+
 ###EX2.1
+
 Écrire un programme C pour faire communiquer un processus fils avec son processus père. Le processus fils doit écrire un entier dans un fichier, puis le processus père doit récupérer cet entier en le lisant dans le fichier.
 
 Explication et Code :
